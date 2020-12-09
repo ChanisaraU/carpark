@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, date, time
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="",
+    password="12345",
     database="car_trmp"
 )
 

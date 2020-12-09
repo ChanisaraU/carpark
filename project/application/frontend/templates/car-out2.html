@@ -76,16 +76,19 @@
                             <div class="row g-2 mt-2">
                                 <div class="col-md-6 text-center">
                                     <h5 class="text-blue">ป้ายทะเบียนรถ</h5>
-                                    <input type="text" class="form-control input-parking-fee text-blue shadow" id="car_out">
-                                    <div class="h5 mb-0">กทม.</div>
+                                    <p id="datalist" hidden></p>
+                                    <input type="text" class="form-control input-parking-fee text-blue shadow" value="{{car_out}}" readonly>
+                                    <div class="h5 mb-0" value="{{province}}">{{province}}</div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" id="time_out" value="{{time_out}}" readonly>
-                                        <label for="time_out">เวลาออก</label>
+                                        <input type="text" class="form-control" id="time_in" value="{{time_in}}" readonly>
+                                        <!-- <div type="text" class="form-control" id="time_in"> </div> -->
+                                        <label  for="time_in">เวลาเข้า</label>
                                     </div>
                                     <div class="form-floating mb-2">
                                         <input type="text" class="form-control" id="time_total" value="{{time_total}}" readonly>
+                                        <!-- <div type="text" class="form-control" id="time_total"></div> -->
                                         <label for="insert_date">เวลาจอด</label>
                                     </div>
                                 </div>
@@ -138,6 +141,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-control-test p" id="first_name" value="{{name}}">{{name}}</div>
+                                            <!-- <div class="form-control-test p" id="first_name"></div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -148,6 +152,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-control-test p" id="member_type" value="{{mem_type}}">{{mem_type}}</div>
+                                            <!-- <div class="form-control-test p" id="member_type"></div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -159,6 +164,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-control-test p" id="expiry_date" value="{{expiry_date}}">{{ expiry_date }}</div>
+                                            <!-- <div class="form-control-test p" id="expiry_date"></div> -->
                                         </div>
                                         <div class="col-md-4 m-0 p-0">
                                             <a href="{{ url_for('invoice') }}" target="_blank" type="button" class="btn btn-primary floating-button">
@@ -268,6 +274,44 @@
 
 });
 
+
+
+
+
+//test
+
+// $(document).ready(function () {
+//             $("#livebox").on("input", function (e) { // ฟังก์ชั่นการค้นหาแบบเรียวไทม์ อักษรต่ออักษร
+//                 $("#datalist").empty();
+//                 $.ajax({
+//                     method: "post",
+//                     url: "/livesearch",
+//                     data: { text: $("#livebox").val() },
+//                     success: function (res) {
+//                         const propertyValues = Object.values(res);
+//                         if(propertyValues==0){
+//                             $("#time_in").html(" ");
+//                              $("#time_total").html(" ");
+//                              $("#first_name").html(" ");
+//                              $("#member_type").html(" ");
+//                              $("#expiry_date").html(" ");
+//                         }
+//                         else{
+//                              $("#time_in").html(res[0]);
+//                              $("#time_total").html(res[1]);
+//                              $("#first_name").html(res[2]);
+//                              $("#member_type").html(res[3]);
+//                              $("#expiry_date").html(res[4]);
+//                         }
+                       
+//                     }
+                 
+//                 });
+               
+//             });
+
+            
+//         });
 
     </script>
 </body>

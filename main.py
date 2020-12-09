@@ -12,8 +12,9 @@ import socket
 import io
 import xlwt
 import pdfkit
-path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+import json
+# path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+# config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
 
 def find_camera(id):
@@ -184,26 +185,52 @@ def dashboard():
 def livesearch():
     if request.method == 'POST':
         searchbox = request.form.get("text")
+        print(searchbox)
         cursor = mysql.connection.cursor()
         # This is just example query , you should replace field names with yours
-        query = "select * from member where first_name LIKE '{}%' order by insert_date".format(
+        query = "select * from parking_log where license_plate LIKE '{}%'".format(
             searchbox)
         cursor.execute(query)
         result = cursor.fetchall()
-        return jsonify(result)
-    else:
-        mycursor = mysql.connection.cursor()
-        cursor2 = mysql.connection.cursor()
-        query2 = "select * from parking_log order by time_in DESC,date_in DESC"
-        cursor2.execute(query2)
-        data = cursor2.fetchall()
-        sql = "INSERT INTO lately_comein(id,license_plate,province,car_type,img_license_plate_in,time_in,date_in,img_license_plate_out) VALUES (%s, %s, %s, %s, %s, %s, %s,%s)"
-        val = (data[0][0], data[0][2], data[0][3], data[0][5],
-               data[0][6], data[0][7], data[0][8], data[0][13])
-        mycursor.execute(sql, val)
-        mysql.connection.commit()
-        mycursor.close()
-        return 'success'
+        if result :
+         #  license_plate = result[0][2]
+         time = str(result[0][8])
+         time_total = str(result[0][17])
+         name = " "
+         memtype = " "
+         expi = " "
+         cs = mysql.connection.cursor()
+         q = "select * from member where license_plate LIKE '{}%'".format(
+            searchbox)
+         cs.execute(q)
+         mem = cs.fetchall()
+         if mem :
+          name = mem[0][3]+" "+mem[0][4]+" "+mem[0][5]
+          memtype = mem[0][2]
+          expi = mem[0][11]
+          print(name)
+        else :
+         time = " "
+         time_total = " "
+         name = " "
+         memtype = " "
+         expi = " "
+
+        return jsonify(time, time_total, name, memtype, expi)
+        # return jsonify(result)
+    # else:
+    #     mycursor = mysql.connection.cursor()
+    #     cursor2 = mysql.connection.cursor()
+    #     query2 = "select * from parking_log order by time_in DESC,date_in DESC"
+    #     cursor2.execute(query2)
+    #     data = cursor2.fetchall()
+    #     sql = "INSERT INTO lately_comein(id,license_plate,province,car_type,img_license_plate_in,time_in,date_in,img_license_plate_out) VALUES (%s, %s, %s, %s, %s, %s, %s,%s)"
+    #     val = (data[0][0], data[0][2], data[0][3], data[0][5],
+    #            data[0][6], data[0][7], data[0][8], data[0][13])
+    #     mycursor.execute(sql, val)
+    #     mysql.connection.commit()
+    #     mycursor.close()
+    #     return 'success'
 
 
 @app.route('/showled')  # แสดงจำนวนรถที่ว่าง
@@ -274,6 +301,7 @@ def maindown1():
         cursor.execute(sql)
         info = cursor.fetchone()
         car_out = info[2]  # license_plate
+        province = info[3]
 
         cursor3 = mysql.connection.cursor()
         sql3 = 'select * from member where license_plate = %s'
@@ -299,7 +327,7 @@ def maindown1():
             time_out = str(info[14])
             amount = info[26]
 
-    return render_template('car-out1.html', name=name, mem_type=mem_type, expiry_date=expiry_date, time_in=time_in, time_out=time_out, amount=amount, car_out=car_out)
+    return render_template('car-out1.html', name=name, mem_type=mem_type, expiry_date=expiry_date, time_in=time_in, time_out=time_out, amount=amount, car_out=car_out ,province=province)
 
 
 @app.route('/car-out2', methods=["GET"])  # ข้อมูลรถออกลานจอด
@@ -312,6 +340,7 @@ def maindown2():
         cursor.execute(sql)
         info = cursor.fetchone()
         car_out = info[2]  # license_plate
+        province = info[3]
 
         cursor3 = mysql.connection.cursor()
         sql3 = 'select * from member where license_plate = %s'
@@ -337,7 +366,7 @@ def maindown2():
             time_out = str(info[14])
             amount = info[26]
 
-    return render_template('car-out2.html', name=name, mem_type=mem_type, expiry_date=expiry_date, time_in=time_in, time_out=time_out, amount=amount, car_out=car_out)
+    return render_template('car-out2.html', name=name, mem_type=mem_type, expiry_date=expiry_date, time_in=time_in, time_out=time_out, amount=amount, car_out=car_out, province=province)
 
 
 @app.route('/report')  # รายงาน
