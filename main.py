@@ -560,76 +560,7 @@ def reportdash():
         except:
             print("Error: Unable to fetch items")
         return render_template('report-dash.html', values=values, labels=labels, legend=legend)
-    
-    
-@app.route('/member-detail', methods=['GET', 'POST'])
-def memberdetail():
-    if session['username'] != " ":
-        # โชว์เฉพาะ Member
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        limit = 10
-        offset = page*limit-limit
-        cursor = mysql.connection.cursor()
-        cursor.execute("select * from member where member_type='Member'")
 
-        result = cursor.fetchall()
-        total = len(result)
-        cur = mysql.connection.cursor()
-        que = "select * from member where member_type='Member' LIMIT %s OFFSET %s"
-        cur.execute(que, (limit, offset))
-        data = cur.fetchall()
-        cur.close()
-        pagination = Pagination(page=page, per_page=limit,
-                                total=total, record_name='mdetail', css_framework='bootstrap4')
-
-        # โชว์เฉพาะ VIP
-        page2 = request.args.get(get_page_parameter(), type=int, default=1)
-        limit2 = 10
-        offset2 = page2*limit2-limit2
-        cursor2 = mysql.connection.cursor()
-        cursor2.execute("select * from member where member_type='VIP'")
-
-        result2 = cursor.fetchall()
-        total2 = len(result2)
-        cur2 = mysql.connection.cursor()
-        que2 = "select * from member where member_type='VIP' LIMIT %s OFFSET %s"
-        cur2.execute(que2, (limit, offset2))
-        data2 = cur2.fetchall()
-        cur2.close()
-        pagination2 = Pagination(page2=page2, per_page=limit2,total=total2, record_name2='vdetail', css_framework='bootstrap4')
-
-        return render_template('member-detail.html', pagination=pagination, mdetail=data, pagination2=pagination2, vdetail=data2)
-
-
-@app.route('/newmember-receipt')
-def newmember_receipt():
-    cursor = mysql.connection.cursor()
-    query = "select * from member"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return render_template('comp/newmember-receipt.html')
-
-
-@app.route('/member-detail', methods=['GET', 'POST'])
-def memberdetail():
-    if session['username'] != " ":
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        limit = 10
-        offset = page*limit-limit
-        cursor = mysql.connection.cursor()
-        cursor.execute("select * from member_new")
-
-        result = cursor.fetchall()
-        total = len(result)
-        cur = mysql.connection.cursor()
-        que = "select * from member_new LIMIT %s OFFSET %s"
-        cur.execute(que, (limit, offset))
-        data = cur.fetchall()
-        cur.close()
-
-        pagination = Pagination(page=page, per_page=limit,
-                                total=total, record_name='mdetail', css_framework='bootstrap4')
-        return render_template('member-detail.html', pagination=pagination, mdetail=data)
 
 @app.route('/transaction', methods=['GET', 'POST'])
 def transaction():
@@ -971,22 +902,23 @@ def shift():
         month = now.strftime("%m")
         day = now.strftime("%d")
         today = year+"-"+month+"-"+day
-
+        
         cursor2 = mysql.connection.cursor() #รถออกจาก user คนนี้
         sql2 = "select *,count(id) FROM receipt where cashier = '"+user+"'"+"and"+" "+"datetime_out = "+"'"+today+"'"
         cursor2.execute(sql2,)
         info2 = cursor2.fetchone()
         count = info2[17]
-        print(count)
+
         cursor3 = mysql.connection.cursor() #รถเข้าทั้งหมดวันนี้
         sql3 = "select *,count(id) from parking_log where date_in = "+"'"+today+"'"
         cursor3.execute(sql3,)
         info3 = cursor3.fetchone()
-        carin = info3[30]
-        print(carin)
+        car_in = info3[29]
 
-        stale = carin - count #รถคงค้างของ user นั้นๆ
-        return render_template('reports/shift-report.html', discount=discount, stale=stale, carin=carin, count=count, amount=amount, datein=datein, user=user ,date_time=date_time,)
+        stale = car_in - count #รถคงค้างของ user นั้นๆ
+
+        return render_template('reports/shift-report.html', car_in=car_in, stale=stale, discount=discount, count=count, amount=amount, datein=datein, user=user ,date_time=date_time,)
+
 
 @app.route('/report/table-car')
 def table_car():
