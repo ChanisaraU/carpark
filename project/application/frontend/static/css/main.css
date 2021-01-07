@@ -352,3 +352,31 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   z-index: 0;
   cursor: pointer;
 }
+
+/* --------------------------------------------------------------------------------------------------------- */
+.width-btn-month {
+  flex: 0 0 auto;
+  width: 24.25%;
+}
+
+.btn-check:active + .btn-outline-months,
+.btn-check:checked + .btn-outline-months,
+.btn-outline-months.active,
+.btn-outline-months.dropdown-toggle.show,
+.btn-outline-months:active {
+  color: #fff;
+  background-color: #4f4629;
+  border-color: #4f4629;
+}
+
+.btn-outline-months {
+  color: #7b7b7b;
+  background-color: #e7e7e7;
+  border-color: #e7e7e7;
+  text-align: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
