@@ -22,6 +22,12 @@
   background-size: cover;
 }
 
+.version-login {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 #invoice-POS {
   /* box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); */
   padding: 2mm;
@@ -76,14 +82,6 @@
   width: 50px;
   background: url(./../image/logo-j-small-black.png) no-repeat;
   background-size: 50px 50px;
-}
-#invoice-POS .clientlogo {
-  float: left;
-  height: 60px;
-  width: 60px;
-  background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
-  background-size: 60px 60px;
-  border-radius: 50px;
 }
 #invoice-POS .info {
   display: block;

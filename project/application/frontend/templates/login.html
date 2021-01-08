@@ -32,11 +32,14 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="รหัสผ่าน" value="{{
                             request.form.password }}" required>
                     </div>
-                    <button type="submit" class="btn btn-primary-jpark btn-block" value="login">เข้าสู่ระบบ</button>
+                    <button type="submit" class="btn btn-primary-jpark btn-block mb-3" value="login">เข้าสู่ระบบ</button>
                 </form>
                 {% if error %}  
                 <p class="error"><strong>Error:</strong> {{ error }}
               {% endif %}
+            </div>
+            <div class="version-login">
+                <span class="text-blue small"> Version 1.0.0 (UAT) 2021-01-07</span>
             </div>
         </div>
     </div>

@@ -114,6 +114,7 @@
                         <table class="table table-hover" style="font-size: 0.5rem;">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th scope="col" class="fixed" style="background: white;">ลำดับ</th>
                                     <th scope="col" class="fixed" style="background: white;">เวลาเข้า</th>
                                     <th scope="col" class="fixed" style="background: white;">เวลาออก</th>
@@ -141,8 +142,13 @@
                             {% for row in transaction %}
                             <tbody id="myTable">
                                 <tr>
-                                    <!-- <td>{{ row[0] }}</td> -->
-                                    <td>{{ loop.index + pagination.skip }}</td>
+                                    <td>
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                        </label>
+                                    </td>
+                                    <td>{{ row[0] }}</td>
+                                    <!-- <td>{{ loop.index + pagination.skip }}</td> -->
                                     <td>{{ row[7] }}</td>
                                     <td>{{ row[14] }}</td>
                                     <td>{{ row[16] }}</td>
@@ -230,21 +236,6 @@
                             {% endif %}
                         </table>
                         {{ pagination.links }}
-                        <!-- <nav>
-                                <ul class="pagination">
-                                  <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0);">Previous</a>
-                                  </li>
-                                  <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                  <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0);">2</a>
-                                  </li>
-                                  <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                                  <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0);">Next</a>
-                                  </li>
-                                </ul>
-                            </nav> -->
                     </div>
                 </div>
 
