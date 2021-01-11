@@ -78,8 +78,8 @@ date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
 
 
 def find_camera(id):
-    cameras = ['rtsp://admin:ap123456789@172.16.6.4',
-               'rtsp://admin:ap123456789@172.16.6.5', 'rtsp://admin:ap123456789@172.16.6.3']
+    cameras = ['rtsp://admin:ap123456789@172.16.6.4/profile3',
+               'rtsp://admin:ap123456789@172.16.6.5/profile3', 'rtsp://admin:ap123456789@172.16.6.3/profile3']
     return cameras[int(id)]
 
 # camera = cv2.VideoCapture('rtsp://admin:Jpark*2020*@172.20.1.138')  # use 0 for web camera
@@ -1037,7 +1037,7 @@ def table_outcar_datatable():
 @app.route('/report/table-staff/datatable')
 def table_staff_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date))/10+360 as amount, discount from login_history'
+    sql = 'select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date)) as amount, discount from login_history'
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
