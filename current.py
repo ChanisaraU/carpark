@@ -1,15 +1,33 @@
 from db_config import mysql  # import sql
 
-def __init__(self, fines, discount, receieve, changes, gate):
-        self.fines = fines
-        self.discount = discount
-        self.receieve = receieve
-        self.changes = changes
-        self.gate = gate
+def cal_original_amount(original_amount,gate):
+    mycursor = mysql.connection.cursor()
+    sql_parking = "update parking_log set amount = %s where id=%s"
+    val = (original_amount,gate)
+    mycursor.execute(sql_parking, val)
+    mysql.connection.commit()
+    mycursor.close() 
+    
+    
+def cal_excluding_vat(excluding_vat,gate):
+    mycursor = mysql.connection.cursor()
+    sql_parking = "update parking_log set excluding_vat = %s where id=%s"
+    val = (excluding_vat,gate)
+    mycursor.execute(sql_parking, val)
+    mysql.connection.commit()
+    mycursor.close()  
+
+
+def cal_vat(vat,gate):
+    mycursor = mysql.connection.cursor()
+    sql_parking = "update parking_log set vat = %s where id=%s"
+    val = (vat,gate)
+    mycursor.execute(sql_parking, val)
+    mysql.connection.commit()
+    mycursor.close()  
 
 
 def cal_fines(fines,gate):
-
     mycursor = mysql.connection.cursor()
     sql_parking = "update parking_log set fines = %s where id=%s"
     val = (fines,gate)

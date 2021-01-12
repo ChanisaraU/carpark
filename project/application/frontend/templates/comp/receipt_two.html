@@ -9,61 +9,52 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
-<body>
-    <style>
-        /* @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400&display=swap'); */
-        @font-face {
-            font-family: 'Cordia New';
-
-            src: {
-                    {
-                    url_for('static', filename='font/Cordia New Regular.ttf')
-                }
+<style>
+    /* @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400&display=swap'); */
+    @font-face {
+        font-family: 'Cordia New';
+        src: {
+                {
+                url_for('static', filename='fonts/Cordia New Regular.ttf')
             }
+        };
+    }
 
-            ;
-        }
-
-        @font-face {
-            font-family: 'Cordia New';
-            font-weight: bold;
-
-            src: {
-                    {
-                    url_for('static', filename='font/Cordia New Bold.ttf')
-                }
+    @font-face {
+        font-family: 'Cordia New';
+        font-weight: bold;
+        src: {
+                {
+                url_for('static', filename='fonts/Cordia New Bold.ttf')
             }
+        };
+    }
 
-            ;
+    body {
+        font-family: 'Cordia New' !important;
+    }
+
+    @page {
+        size: 58mm 91mm
+    }
+
+    body.receipt .sheet {
+        width: 58mm;
+        height: 91mm
+    }
+
+    @media print {
+        body.receipt {
+            width: 58mm
         }
+    }
 
-        body {
-            font-family: 'Cordia New' !important;
-        }
-
-        @page {
-            size: 58mm 91mm
-        }
-
-        body.receipt .sheet {
-            width: 58mm;
-            height: 91mm
-        }
-
-        @media print {
-            body.receipt {
-                width: 58mm
-            }
-        }
-
-        .text-header {
-            font-size: 1rem;
-            margin-bottom: 0.15rem !important;
-        }
-    </style>
-    <div id="invoice-POS">
-
+    .text-header {
+        font-size: 1rem;
+        margin-bottom: 0.15rem !important;
+    }
+</style>
+    <div id="invoice-POS" style="zoom: 130%;">
         <center id="top">
             <div class="logo"></div>
             <div class="info">
@@ -73,7 +64,6 @@
             <!--End Info-->
         </center>
         <!--End InvoiceTop-->
-
         <div id="mid">
             <div class="info">
                 <!-- <h2>Contact Info</h2> -->
@@ -82,6 +72,15 @@
                     เขตปทุมวัน กรุงเทพฯ 10330 <br>
                 </p>
             </div>
+        </div>
+        <div id="mid" >
+            <!-- <h2>Contact Info</h2> -->
+            <p class="text-center text-header">
+                ใบเสร็จรับเงิน /ใบกำกับภาษีอย่างย่อ<br>
+            </p>
+            <p class="text-center text-header">
+                RECEIPT/TEX INVOICE(ABB) (VAT INCLUDED)<br>
+            </p>
         </div>
         <!--End Invoice Mid-->
 
@@ -99,7 +98,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">0735541000291</p>
+                            <p class="itemtext">{{tax_id}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -117,7 +116,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">P002020</p>
+                            <p class="itemtext">{{pos_id}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -126,7 +125,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">123451000000</p>
+                            <p class="itemtext">{{reg_id}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -135,7 +134,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">ศิรินทรา สมสลิต</p>
+                            <p class="itemtext">{{cashier}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -144,7 +143,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">ทางออก 2</p>
+                            <p class="itemtext">{{cashier_box}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -153,7 +152,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">03/09/2563 14:58</p>
+                            <p class="itemtext">{{date_now}}</p>
                         </td>
                     </tr>
                     <tr class="service">
@@ -176,7 +175,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">3656</p>
+                        <p class="itemtext">{{license_plate}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -185,7 +184,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">03/09/2563 12:22</p>
+                        <p class="itemtext">{{time_in}}{{date_in}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -194,7 +193,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">03/09/2563 14:58</p>
+                        <p class="itemtext">{{time_out}}<br>{{date_out}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -212,7 +211,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">60.00 Baht</p>
+                        <p class="itemtext">{{amount}} Baht</p>
                     </td>
                 </tr>
                 <tr>
@@ -221,7 +220,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">0.00 Baht</p>
+                        <p class="itemtext">{{fines}} Baht</p>
                     </td>
                 </tr>
                 <tr class="tabletitle">
@@ -230,25 +229,25 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">60.00 Baht</p>
+                        <p class="itemtext">{{discount}} Baht</p>
                     </td>
                 </tr>
                 <tr class="tabletitle">
                     <td class="tableitem">
-                        <p class="itemtext">จำนวนเงินที่ได้รับ :</p>
+                        <p class="itemtext">จำนวนเงินที่ได้รับ:</p>
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">0.00 Baht</p>
+                        <p class="itemtext">{{receieve}} Baht</p>
                     </td>
                 </tr>
                 <tr class="tabletitle">
                     <td class="tableitem">
-                        <p class="itemtext">เงินทอน :</p>
+                        <p class="itemtext">เงินทอน:</p>
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">0.00 Baht</p>
+                        <p class="itemtext">{{changess}} Baht</p>
                     </td>
                 </tr>
                 <tr>
@@ -269,7 +268,7 @@
         <!--End InvoiceBot-->
     </div>
     <!--End Invoice-->
-</body>
+
 </html>
 <script>
     window.onload =  function() {
