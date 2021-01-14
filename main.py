@@ -706,12 +706,12 @@ def memberdetail():
         limit = 10
         offset = page*limit-limit
         cursor = mysql.connection.cursor()
-        cursor.execute("select * from member where type='Member'")
+        cursor.execute("select * from member where member_type='Member'")
 
         result = cursor.fetchall()
         total = len(result)
         cur = mysql.connection.cursor()
-        que = "select * from member where type='Member' LIMIT %s OFFSET %s"
+        que = "select * from member where member_type='Member' LIMIT %s OFFSET %s"
         cur.execute(que, (limit, offset))
         data = cur.fetchall()
         cur.close()
@@ -723,12 +723,12 @@ def memberdetail():
         limit2 = 10
         offset2 = page2*limit2-limit2
         cursor2 = mysql.connection.cursor()
-        cursor2.execute("select * from member where type='VIP'")
+        cursor2.execute("select * from member where member_type ='VIP'")
 
         result2 = cursor.fetchall()
         total2 = len(result2)
         cur2 = mysql.connection.cursor()
-        que2 = "select * from member where type='VIP' LIMIT %s OFFSET %s"
+        que2 = "select * from member where member_type ='VIP' LIMIT %s OFFSET %s"
         cur2.execute(que2, (limit, offset2))
         data2 = cur2.fetchall()
         cur2.close()
@@ -740,7 +740,7 @@ def memberdetail():
 @app.route('/addmember', methods=["POST", "GET"])
 def addmember():
     cursor = mysql.connection.cursor()
-    query = "select * from member where type='Member'"
+    query = "select * from member where member_type ='Member'"
     cursor.execute(query)
     result = cursor.fetchall()
     cursor2 = mysql.connection.cursor()
@@ -882,7 +882,7 @@ def logout():
     mycursor = mysql.connection.cursor()
     now = datetime.now()
     logout_date = now.strftime('%Y-%m-%d %H:%M:%S')
-
+    print(session['username'])
     sql = "UPDATE login_history SET status = 'signed out', logout_date= %s WHERE user_name = %s"
     val = (logout_date, session['username'])
     mycursor.execute(sql, val)
@@ -905,63 +905,64 @@ def logout():
 
 @app.route('/receipt')
 def receipt():
-    cursor = mysql.connection.cursor()
-    query = "select * from receipt ORDER BY id DESC LIMIT 1"
-    cursor.execute(query)
-    result = cursor.fetchone()
-    tax_id = result[1]
-    pos_id = result[2]
-    reg_id = result[3]
-    cashier = result[4]
-    cashier_box = cashier_box = result[5]
-    today_date_time = result[6]
-    now = datetime.now()
-    no = year+month+day
-    date_now = now.strftime('%Y-%m-%d %H:%M:%S')
-    license_plate= result[8]
-    time_in = str(result[11])
-    date_in = str(result[9])
-    time_out = str(result[12])
-    date_out = str(result[10])
+    if session['username'] != " ":
+        cursor = mysql.connection.cursor()
+        query = "select * from receipt where cashier_box = 'exit-1' ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        result = cursor.fetchone()
+        tax_id = result[1]
+        pos_id = result[2]
+        reg_id = result[3]
 
-    receieve = result[12]
-    discount = result[13]
-    changess = result[14]
-    amount = result[15]
-    fines = result[16]
+        cashier_box = cashier_box = result[5]
+        today_date_time = result[6]
+        now = datetime.now()
+        no = year+month+day
+        date_now = now.strftime('%Y-%m-%d %H:%M:%S')
+        license_plate= result[8]
+        time_in = str(result[11])
+        date_in = str(result[9])
+        time_out = str(result[12])
+        date_out = str(result[10])
+
+        receieve = result[12]
+        discount = result[13]
+        changess = result[14]
+        amount = result[15]
+        fines = result[16]
     
-    return render_template('comp/receipt.html', no=no, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve ,cashier=cashier)
->>>>>>> 2382bb8 ([mint2] แก้ไขรายละเอียดเล็กๆ)
+    return render_template('comp/receipt.html', no=no, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve)
 
 
 @app.route('/receipt_two')
 def receipt_two():
-    cursor = mysql.connection.cursor()
-    query = "select * from receipt"
-    cursor.execute(query)
-    result = cursor.fetchone()
-    tax_id = result[1]
-    pos_id = result[2]
-    reg_id = result[3]
-    cashier = result[4]
-    cashier_box = cashier_box = result[5]
-    today_date_time = result[6]
-    now = datetime.now()
-    no = year+month+day
-    date_now = now.strftime('%Y-%m-%d %H:%M:%S')
-    license_plate= result[8]
-    time_in = str(result[11])
-    date_in = str(result[9])
-    time_out = str(result[12])
-    date_out = str(result[10])
-    
-    receieve = result[12]
-    discount = result[13]
-    changess = result[14]
-    amount = result[15]
-    fines = result[16]
+    if session['username'] != " ":
+        cursor = mysql.connection.cursor()
+        query = "select * from receipt where cashier_box = 'exit-2' ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        result = cursor.fetchone()
+        tax_id = result[1]
+        pos_id = result[2]
+        reg_id = result[3]
 
-    return render_template('comp/receipt_two.html', no=no, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve ,cashier=cashier)
+        cashier_box = cashier_box = result[5]
+        today_date_time = result[6]
+        now = datetime.now()
+        no = year+month+day
+        date_now = now.strftime('%Y-%m-%d %H:%M:%S')
+        license_plate= result[8]
+        time_in = str(result[11])
+        date_in = str(result[9])
+        time_out = str(result[12])
+        date_out = str(result[10])
+
+        receieve = result[12]
+        discount = result[13]
+        changess = result[14]
+        amount = result[15]
+        fines = result[16]
+
+    return render_template('comp/receipt_two.html', no=no, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve)
 
 
 
@@ -997,10 +998,6 @@ def proinout():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline;filename=pro-inout-report.pdf'
     return response
-
->>>>>>> 2382bb8 ([mint2] แก้ไขรายละเอียดเล็กๆ)
-
-    return render_template('comp/receipt.html', no=no, date_now=date_now, tax_id=tax_id, pos_id=pos_id, reg_id=reg_id, today_date_time=today_date_time, cashier_box=cashier_box, license_plate=license_plate, amount=amount, datetime_out=datetime_out, datetime_in=datetime_in, discount=discount, fines=fines, changess=changess, receieve=receieve, cashier=cashier)
 
 
 @app.route('/shift-report')
@@ -1042,12 +1039,13 @@ def shift():
         sql3 = "select *,count(id) from parking_log where date_in = "+"'"+today+"'"
         cursor3.execute(sql3,)
         info3 = cursor3.fetchone()
-        car_in = info3[25]
+        car_in = info3[29]
 
 
         stale = car_in - count  # รถคงค้างของ user นั้นๆ
 
         return render_template('reports/shift-report.html', car_in=car_in, stale=stale, discount=discount, count=count, amount=amount, datein=datein, user=user, date_time=date_time)
+
 
 @app.route('/report/table-car')
 def table_car():
@@ -1086,20 +1084,6 @@ def table_salestax_datatable():
     return data
 
 # ต้องกำหนดเงื่อนไขก่อน
-
-
-@app.route('/report/outcar/datatable')
-def table_outcar_datatable():
-
-
-@app.route('/report/table_member_income/datatable')
-def table_member_datatable():
-    cursor = mysql.connection.cursor()
-    sql = 'select * from member'
-    cursor.execute(sql)
-    info = cursor.fetchall()
-    data = jsonify({'data': info})
-    return data
 
 
 @app.route('/report/table-vat/datatable')

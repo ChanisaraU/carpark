@@ -134,7 +134,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">{{cashier}}</p>
+                            <p class="itemtext">{{session['username']}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -184,7 +184,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">{{datetime_in}}</p>
+                        <p class="itemtext">{{time_in}}<br>{{date_in}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -193,7 +193,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">{{datetime_out}}</p>
+                        <p class="itemtext">{{time_out}}<br>{{date_out}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -228,9 +228,15 @@
                         <p class="itemtext">ส่วนลด :</p>
                     </td>
                     <td class="tableitem"></td>
+                    {% if discount = "None" %} 
+                    <td class="tableitem">
+                        <p class="itemtext">0 Baht</p>
+                    </td>
+                    {% else %}
                     <td class="tableitem">
                         <p class="itemtext">{{discount}} Baht</p>
                     </td>
+                    {% endif %}
                 </tr>
                 <tr class="tabletitle">
                     <td class="tableitem">

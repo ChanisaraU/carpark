@@ -94,12 +94,6 @@ def cal_Price_two():
         return price ,excluding_vat ,vat
 
 
-
-
-
-
-
-
 def cal_amount(price,id):
     mycursor = mydb.cursor()
     sql_parking = "update test_log set amount = %s where id = %s "
