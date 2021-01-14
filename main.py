@@ -402,8 +402,14 @@ def maindown_two():
 
 
 report_header_definition = {
+    "": {
+        "api": "",
+        "title": "",
+        "header": []
+    },
     "car": {
         "api": "/report/table-car/datatable",
+        "title": ["รายงานการเข้าออกของรถ"],
         "header": [
             "ลำดับ",
             "ประเภท",
@@ -422,6 +428,7 @@ report_header_definition = {
     },
     "salestax": {
         "api": "/report/table-salestax/datatable",
+        "title": ["รายงานภาษีขาย"],
         "header": [
             "ลำดับ",
             "เลขที่ใบกำกับภาษี",
@@ -441,6 +448,7 @@ report_header_definition = {
     },
     "outcar": {
         "api": "/report/outcar/datatable",
+        "title": ["รายงานรถค้าง"],
         "header": [
             "ลำดับ",
             "ประเภท",
@@ -450,6 +458,7 @@ report_header_definition = {
     },
     "staff": {
         "api": "/report/table-staff/datatable",
+        "title": ["รายงานการทำงานของเจ้าหน้าที่"],
         "header": [
             "ลำดับ",
             "ชื่อเจ้าหน้าที่",
@@ -461,10 +470,10 @@ report_header_definition = {
     },
     "member_income": {
         "api": "/report/table_member_income/datatable",
+        "title": ["รายงานรายได้จากสมาชิก"],
         "header": [
             "ลำดับ",
-            "ชื่อ",
-            "นามสกุล",
+            "ชื่อ - นามสกุล",
             "ทะเบียนรถ",
             "เลขที่ใบเสร็จ",
             "วันที่ชำระ",
@@ -488,8 +497,8 @@ def report():
         if not report_name:
             report_name = list(report_header_definition.keys())[0]
         table_header = report_header_definition[report_name]['header']
+        title = report_header_definition[report_name]['title']
         api = report_header_definition[report_name]['api']
-
         # api_param = "?"
 
         # api_param = "&"
@@ -505,7 +514,7 @@ def report():
 
         # &date_in=2020-10-10&date_out=2020-10-10
 
-    return render_template("report.html", table_header=table_header, api=api)
+    return render_template("report.html", table_header=table_header, api=api, title=title)
 
 
 @app.route('/report-dash')  # รายงาน
@@ -683,12 +692,12 @@ def memberdetail():
         limit = 10
         offset = page*limit-limit
         cursor = mysql.connection.cursor()
-        cursor.execute("select * from member where member_type='Member'")
+        cursor.execute("select * from member where type='Member'")
 
         result = cursor.fetchall()
         total = len(result)
         cur = mysql.connection.cursor()
-        que = "select * from member where member_type='Member' LIMIT %s OFFSET %s"
+        que = "select * from member where type='Member' LIMIT %s OFFSET %s"
         cur.execute(que, (limit, offset))
         data = cur.fetchall()
         cur.close()
@@ -700,12 +709,12 @@ def memberdetail():
         limit2 = 10
         offset2 = page2*limit2-limit2
         cursor2 = mysql.connection.cursor()
-        cursor2.execute("select * from member where member_type='VIP'")
+        cursor2.execute("select * from member where type='VIP'")
 
         result2 = cursor.fetchall()
         total2 = len(result2)
         cur2 = mysql.connection.cursor()
-        que2 = "select * from member where member_type='VIP' LIMIT %s OFFSET %s"
+        que2 = "select * from member where type='VIP' LIMIT %s OFFSET %s"
         cur2.execute(que2, (limit, offset2))
         data2 = cur2.fetchall()
         cur2.close()
@@ -718,7 +727,7 @@ def memberdetail():
 @app.route('/addmember', methods=["POST", "GET"])
 def addmember():
     cursor = mysql.connection.cursor()
-    query = "select * from member where member_type='Member'"
+    query = "select * from member where type='Member'"
     cursor.execute(query)
     result = cursor.fetchall()
     cursor2 = mysql.connection.cursor()
@@ -761,7 +770,7 @@ def remember():
     mysql.connection.commit()
     cursor2.close()
     cursor = mysql.connection.cursor()
-    query = "select * from member where member_type='VIP'"
+    query = "select * from member where type='VIP'"
     cursor.execute(query)
     result = cursor.fetchall()
     return render_template('member-detail.html', result=result)
@@ -788,7 +797,7 @@ def editmember():
     mysql.connection.commit()
     cursor2.close()
     cursor = mysql.connection.cursor()
-    query = "select * from member where member_type='VIP'"
+    query = "select * from member where type='VIP'"
     cursor.execute(query)
     result = cursor.fetchall()
     return render_template('member-detail.html', result=result)
@@ -797,7 +806,7 @@ def editmember():
 @app.route('/addvip', methods=["POST", "GET"])
 def addvip():
     cursor = mysql.connection.cursor()
-    query = "select * from member where member_type='VIP'"
+    query = "select * from member where type='VIP'"
     cursor.execute(query)
     result = cursor.fetchall()
     cursor2 = mysql.connection.cursor()
@@ -840,7 +849,7 @@ def editvip():
     mysql.connection.commit()
     cursor2.close()
     cursor = mysql.connection.cursor()
-    query = "select * from member where member_type='VIP'"
+    query = "select * from member where type='VIP'"
     cursor.execute(query)
     result = cursor.fetchall()
     return render_template('member-detail.html', result=result)
@@ -986,8 +995,7 @@ def shift():
 @app.route('/report/table-car/datatable')
 def table_car_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select parking_log.id, member.member_type, parking_log.license_plate, parking_log.time_in, receipt.cashier, parking_log.time_out, parking_log.time_total, parking_log.time_total, parking_log.time_total, parking_log.time_total, parking_log.fines, parking_log.amount, parking_log.discount from parking_log inner join member on parking_log.id = member.id inner join receipt on parking_log.id = receipt.id'
-    # sql = 'select parking_log.id, member.member_type, parking_log.license_plate, parking_log.time_in, receipt.cashier, parking_log.time_out, parking_log.time_promotion, parking_log.time_discount, parking_log.time_grand, parking_log.fines, parking_log.amount, parking_log.discount from parking_log inner join member on parking_log.id = member.id inner join receipt on parking_log.id = receipt.id'
+    sql = 'select id, member_type, license_plate, time_in, cashier, time_out, time_total, time_promotion, time_discount, time_grand, fines, amount, discount from parking_log'
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1003,7 +1011,7 @@ def table_car_datatable():
 @app.route('/report/table-salestax/datatable')
 def table_salestax_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select receipt.id, receipt.tax_id, member.card_no, receipt.license_plate, date(receipt.datetime_in), time(receipt.datetime_in), receipt.cashier, receipt.cashier_box, date(receipt.datetime_out), time(receipt.datetime_out), receipt.fines, receipt.amount, receipt.amount, receipt.amount from receipt inner join member on receipt.id = member.id'
+    sql = 'select receipt.id, receipt.tax_id, member.card_no, receipt.license_plate, date(receipt.datetime_in), time(receipt.datetime_in), receipt.cashier, receipt.cashier_box, date(receipt.datetime_out), time(receipt.datetime_out), receipt.fines, receipt.amount, receipt.vat, receipt.total from receipt inner join member on receipt.id = member.id'
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1015,13 +1023,13 @@ def table_salestax_datatable():
     data = jsonify({'data': out})
     return data
 
+# ต้องกำหนดเงื่อนไขก่อน
+
 
 @app.route('/report/outcar/datatable')
 def table_outcar_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select parking_log.id, member.member_type, parking_log.license_plate,  parking_log.date_in + " " +parking_log.time_in from parking_log inner join member on parking_log.id = member.id'
-    # join sql
-    # sql = 'select parking_log.id, member.member_type, parking_log.license_plate,  parking_log.date_in + " " +parking_log.time_in from parking_log inner join member on parking_log.id = member.id'
+    sql = 'select id, member_type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = ""'
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1053,9 +1061,7 @@ def table_staff_datatable():
 @app.route('/report/table_member_income/datatable')
 def table_member_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select id, first_name, last_name, license_plate, member_package, expiry_date, expiry_date, grand_amount, position from member'
-    # join sql
-    # sql = 'select id, first_name, last_name, license_plate, reset_member, pay_date, expiry_date, grand_amount, cashier from member'
+    sql = 'select id, concat(first_name, " ", last_name) as fname, license_plate, member_receipt_no, pay_date, expiry_date, grand_amount, cashier from member'
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []

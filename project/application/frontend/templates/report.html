@@ -37,7 +37,7 @@
                       <option value="salestax">รายงานภาษีขาย</option>
                       <option value="outcar">รายงานรถค้าง</option>
                       <option value="staff">รายงานการทำงานของเจ้าหน้าที่</option>
-                      <option value="member_income">รายงานรายได้จากสมาชิก</option>
+                      <option value="member_income">รายงานรายได้จากสมาชิก (Member)</option>
                     </select>
                     <button class="btn btn-primary test"><i class="fas fa-stream"></i> แสดงผล</button>
                   </div>
@@ -70,7 +70,13 @@
                   </div>
                 </form>
 
+
                 <div id="areatodisplay"></div>
+                <div class="text-center my-2">
+                  {% for p in title %}
+                    <h5>{{p}}</h5>
+                  {% endfor %}
+                </div>
                 <div class="table-responsive">
                   <table class="table table-bordered" id="monitorTable" width="100%" cellspacing="0">
                     <thead>
@@ -183,22 +189,18 @@
           $(".dt-button.buttons-print").click();
         });
 
-			});
+      });
 
-    // function calldropdown(mySelect) {
-    //   document.getElementById("areatodisplay").innerHTML = mySelect;
-    // }
-
-    // function GetSelectedValue(){
-    //   var e = document.getElementById("mySelect");
-    //   var result = e.options[e.selectedIndex].value;
-    //   document.getElementById("areatodisplay").innerHTML = result;
-    // }
-
-      function getSelectedValue() {
-      var selectedValue = document.getElementById("mySelect").value; 
+    function calldropdown(mySelect) {
+      document.getElementById("areatodisplay").innerHTML = mySelect;
     }
 
+    // $(function() {
+    //     $('.test').on('click', function() {
+    //         var selected = $('#mySelect option:selected');
+    //         alert(selected.val()); 
+    //     });
+    // });
 
     // ควบคุม Sidebar
     $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {

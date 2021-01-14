@@ -86,16 +86,16 @@
                             <div class="row g-2 mt-2">
                                 <div class="col-md-6 text-center">
                                     <h5 class="text-blue">ป้ายทะเบียนรถ</h5>
-                                    <input type="text" class="form-control" value="{{car_out}}">
+                                    <div class="form-control">{{car_out}}</div>
                                     <div class="fw-normal">{{province}}</div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" id="time_out" value="{{time_out}}" readonly>
+                                        <div class="form-control" id="time_out">{{time_out}}</div>
                                         <label for="time_out">เวลาเข้า</label>
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <input type="text" class="form-control" id="time_total" value="{{time_total}}" readonly>
+                                        <div class="form-control" id="time_total">{{time_total}}</div>
                                         <label for="insert_date">เวลาจอด</label>
                                     </div>
                                 </div>
