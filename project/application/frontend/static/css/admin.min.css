@@ -9487,6 +9487,8 @@ a:focus {
   width: 0 !important;
   overflow: hidden;
   transition: all 0.2s ease-out;
+  padding-right: 0px !important;
+  margin-right: 0px !important;
 }
 .sidebar-brand.toggled {
   display: none;
@@ -9618,6 +9620,7 @@ a:focus {
   .sidebar.toggled .nav-item .collapse,
   .sidebar.toggled .nav-item .collapsing {
     margin: 0;
+    display: none;
   }
   .sidebar.toggled .nav-item:last-child {
     margin-bottom: 1rem;
