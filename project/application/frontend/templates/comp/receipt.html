@@ -161,7 +161,7 @@
                         </td>
                         <td class="tableitem"></td>
                         <td class="tableitem">
-                            <p class="itemtext">VBJP{{no}}0000</p>
+                            <p class="itemtext">{{receipt_no}}</p>
                         </td>
                     </tr>
                 </table>
@@ -202,7 +202,7 @@
                     </td>
                     <td class="tableitem"></td>
                     <td class="tableitem">
-                        <p class="itemtext">02:36 Hrs.</p>
+                        <p class="itemtext">{{total_time}} Hrs.</p>
                     </td>
                 </tr>
                 <tr>
@@ -228,15 +228,10 @@
                         <p class="itemtext">ส่วนลด :</p>
                     </td>
                     <td class="tableitem"></td>
-                    {% if discount = "None" %} 
-                    <td class="tableitem">
-                        <p class="itemtext">0 Baht</p>
-                    </td>
-                    {% else %}
                     <td class="tableitem">
                         <p class="itemtext">{{discount}} Baht</p>
                     </td>
-                    {% endif %}
+
                 </tr>
                 <tr class="tabletitle">
                     <td class="tableitem">

@@ -21,53 +21,6 @@ import xlwt
 import pdfkit
 
 
-app.config['SQLALCHEMY_DATABASE_URI']="mysql://root:@localhost/car_trmp"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-
-class Parking_log(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    license_plate = db.Column(db.String(10), unique=True, nullable=False)
-    province = db.Column(db.String(50), unique=True, nullable=False)
-    img_face_in = db.Column(db.String(120), unique=True, nullable=False)
-    img_license_plate_in = db.Column(
-        db.String(80), unique=True, nullable=False)
-    car_type = db.Column(db.String(20), unique=True, nullable=False)
-    time_in = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    date_in = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    insert_by_in = db.Column(db.String(50), unique=True, nullable=False)
-    insert_date_in = db.Column(
-        db.DateTime, default=datetime.utcnow, nullable=False)
-    cancel = db.Column(db.String(80), unique=True, nullable=False)
-    img_face_out = db.Column(db.String(120), unique=True, nullable=False)
-    img_license_plate_out = db.Column(
-        db.String(80), unique=True, nullable=False)
-    time_out = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    date_out = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    time_total = db.Column(db.String(10), unique=True, nullable=False)
-    discount_name = db.Column(db.String(50), unique=True, nullable=False)
-    pay_fine = db.Column(db.Float, unique=True, nullable=False)
-    amount = db.Column(db.Float, unique=True, nullable=False)
-    discount = db.Column(db.Float, unique=True, nullable=False)
-    earn = db.Column(db.Float, unique=True, nullable=False)
-    changes = db.Column(db.Float, unique=True, nullable=False)
-    insert_by_out = db.Column(db.String(120), unique=True, nullable=False)
-    insert_date_out = db.Column(db.String(120), unique=True, nullable=False)
-    reason = db.Column(db.String(120), unique=True, nullable=False)
-    total_amount = db.Column(db.Float, unique=True, nullable=False)
-    vat = db.Column(db.Float, unique=True, nullable=False)
-    fines = db.Column(db.Float, unique=True, nullable=False)
-    licenplate_out = db.Column(db.Integer, unique=True, nullable=False)
-
-    def __repr__(self):
-        return '<Parking_log %r>' % self.Parking_log
-
-# log = Parking_log.query.filter_by(id=1).first()
-# print(log.license_plate)
-
-
 path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
@@ -76,6 +29,7 @@ year = now.strftime("%Y")
 month = now.strftime("%m")
 day = now.strftime("%d")
 time = now.strftime("%H:%M:%S")
+date = now.strftime("%Y-%m-%d")
 date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
 
 
@@ -253,6 +207,27 @@ def car_in():
 
 @app.route('/car-out1', methods=["POST"])
 def current():
+    cursor = mysql.connection.cursor()
+    query = "select *,COUNT(id) from receipt where cashier_box = 'exit-1' ORDER BY id DESC LIMIT 1 "
+    cursor.execute(query)
+    result = cursor.fetchone()
+    count_id = result[19]
+
+    a = str(000)+str(000)+str(000)
+    b = str(000)+str(000)
+    c = str(000)
+    
+    if count_id <= 9 :
+        count = a+str(count_id)
+    elif count_id >= 10 and count_id <= 99   :
+        count = b+str(count_id)
+    else :
+        count = c+str(count_id)
+
+    no = year+month+day
+    receipt_no = 'VBJP'+no+count
+        
+
     discount = request.form.get("discount")  # คูปอง
     fines = request.form.get("fines")  # ค่าปรับ
     original_amount = request.form.get(
@@ -270,6 +245,7 @@ def current():
     cal_receieve(receieve,gate)
     cal_changes(changes,gate)
     cal_original_amount(original_amount,gate)
+    
     TAX_ID = request.form.get("TAX_ID") 
     POS_ID = request.form.get("POS_ID") 
     REG_ID = request.form.get("REG_ID") 
@@ -286,13 +262,33 @@ def current():
     cashier_box = request.form.get("cashier_box") 
     today = datetime.today()
     
-    record_receipt(TAX_ID, POS_ID, REG_ID, today, cashier_box,original_license_plate,original_amount ,date_in ,date_out, time_in, time_out,discount ,fines ,changes ,receieve ,user)
+    record_receipt(TAX_ID, POS_ID, REG_ID, today, receipt_no, cashier_box,original_license_plate,original_amount ,date_in ,date_out, time_in, time_out,discount ,fines ,changes ,receieve ,user)
     
     return maindown()
 
 
 @app.route('/car-out2', methods=["POST"])
 def current2():
+    cursor = mysql.connection.cursor()
+    query = "select *,COUNT(id) from receipt where cashier_box = 'exit-2' ORDER BY id DESC LIMIT 1"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    count_id = result[19]
+
+    a = str(000)+str(000)+str(000)
+    b = str(000)+str(000)
+    c = str(000)
+    
+    if count_id <= 9 :
+        count = a+str(count_id)
+    elif count_id >= 10 and count_id <= 99   :
+        count = b+str(count_id)
+    else :
+        count = c+str(count_id)
+
+    no = year+month+day
+    receipt_no = 'VBJP'+no+count
+    
     discount = request.form.get("discount")  # คูปอง
     fines = request.form.get("fines")  # ค่าปรับ
     original_amount = request.form.get(
@@ -326,7 +322,7 @@ def current2():
     cashier_box = request.form.get("cashier_box") 
     today = datetime.today()
     
-    record_receipt(TAX_ID, POS_ID, REG_ID, today, cashier_box,original_license_plate,original_amount ,date_in ,date_out, time_in, time_out,discount ,fines ,changes ,receieve ,user)
+    record_receipt(TAX_ID, POS_ID, REG_ID, today, receipt_no, cashier_box,original_license_plate,original_amount ,date_in ,date_out, time_in, time_out,discount ,fines ,changes ,receieve ,user)
     return maindown_two()
 
 
@@ -497,6 +493,21 @@ report_header_definition = {
             "เจ้าหน้าที่"
         ]
     },
+        "amount": {
+        "api": "/report/table_amount/datatable",
+        "title": ["รายงานยอดเงินประจำวัน"],
+        "header": [
+            "ลำดับ",
+            "ทะเบียนรถ",
+            "เวลาเข้า",
+            "วันที่เข้า",
+            "เวลาออก",
+            "วันที่ออก",
+            "รายได้",
+            "ภาษีหลังหัก",
+            "ภาษี",
+        ]
+    },
 }
 
 
@@ -509,27 +520,28 @@ def report():
                 return render_template("report.html", report_list=report_list)
 
         report_name = request.args.get('reports') #รับค่ามาจาก ตัวเลือกหน้า report id="mySelect" name="reports"
+        date_start = request.args.get('date_start')
+        date_end = request.args.get('date_end') 
+
+
         if not report_name:
             report_name = list(report_header_definition.keys())[0]
         table_header = report_header_definition[report_name]['header']
         title = report_header_definition[report_name]['title']
         api = report_header_definition[report_name]['api']
-        # api_param = "?"
+        
+        api_param = "?"
+        params = []
+        if date_start :
+            params.append("date_start=" + date_start) # date_in=2020-10-10
+        if date_end:
+            params.append("date_end=" + date_end) # date_out=2020-10-10
+            
+        api_param += "&".join(params)
+        # SELECT * FROM parking_log WHERE date_in BETWEEN '2021-01-01' AND '2021-01-31';
 
-        # api_param = "&"
-        # params = []
-        # if date_in:
-        #     params.append("date_in=" + date_in) # date_in=2020-10-10
-        # if date_out:
-        #     params.append("date_out=" + date_out) # date_out=2020-10-10
-
-        # api_param += "&".join(params)
-
-        # ?date_in=2020-10-10&date_out=2020-10-10
-
-        # &date_in=2020-10-10&date_out=2020-10-10
-
-    return render_template("report.html", table_header=table_header, api=api, title=title)
+        
+    return render_template("report.html", table_header=table_header, api=api, api_param=api_param, title=title)
 
 
 @app.route('/report-dash')  # รายงาน
@@ -582,16 +594,20 @@ def transaction():
                                 total=total, record_name='transaction', css_framework='bootstrap4')
         return render_template('transaction.html', roles=roles, pagination=pagination, transaction=data, data=[{'in_out': 'เข้า'}, {'in_out': 'ออก'}], type=[{'typecar': 'รถยนต์ส่วนบุคคล'}, {'typecar': 'รถแท๊กซี่'}, {'typecar': 'รถจักรยานยนต์'}])
 
-# @app.route('/transaction', methods=['GET', 'POST'])  # รายการรถเข้า-ออกสะสม
-# def listcar():
-#     if session['username'] != " ":
-#         now = datetime.now()
-#         today = now.strftime('%Y-%m-%d')
-#         cursor = mysql.connection.cursor()
-#         query = "select * from parking_log where date_in = %s order by time_in DESC,date_in DESC"
-#         cursor.execute(query, (today,))
-#         resultt = cursor.fetchall()
-#         return render_template('transaction.html', result=resultt, data=[{'in_out': 'เข้า'}, {'in_out': 'ออก'}], type=[{'typecar': 'รถยนต์ส่วนบุคคล'}, {'typecar': 'รถแท๊กซี่'}, {'typecar': 'รถจักรยานยนต์'}])
+@app.route('/transaction/json', methods=['GET', 'POST'])
+def transaction_json():
+    mem_no = request.args.get('mem_no')
+    print(mem_no)
+    cursor = mysql.connection.cursor()
+    sql = "select id, car_type ,license_plate ,province  from parking_log where id = %s"
+    val = (mem_no,)
+    cursor.execute(sql,val)
+    result = cursor.fetchone()
+
+    payload = []
+    content = {}
+    content = {'id': result[0], 'car_type': result[1], 'license_plate' : result[2], 'province' : result[3]}
+    return content
 
 
 @app.route('/addcar', methods=['GET', 'POST'])  # รายการรถเข้า-ออกสะสม
@@ -617,29 +633,25 @@ def addcar():
         cursor2.execute(sql, val)
         mysql.connection.commit()
         cursor2.close()
-    return render_template('transaction.html', result=resultt, data=[{'in_out': 'เข้า'}, {'in_out': 'ออก'}], type=[{'typecar': 'รถยนต์ส่วนบุคคล'}, {'typecar': 'รถแท๊กซี่'}, {'typecar': 'รถจักรยานยนต์'}])
+        
+    return transaction()
 
 
 @app.route('/edit', methods=["POST", "GET"])
 def edit():
-    cursor2 = mysql.connection.cursor()
+    
     id = request.values.get('id')
-    car_regis = request.values.get('carregis_')
-    province = request.values.get('province_')
-    typecar = request.values.get('typecar_')
+    license_plate = request.values.get('license_plate')
+    province = request.values.get('province')
+    car_type = request.values.get('car_type')
 
+    cursor2 = mysql.connection.cursor()
     sql = "UPDATE parking_log SET license_plate = %s, province= %s ,car_type= %s WHERE id = %s"
-    val = (car_regis, province, typecar, id)
+    val = (license_plate, province, car_type, id)
     cursor2.execute(sql, val)
     mysql.connection.commit()
     cursor2.close()
-    now = datetime.now()
-    today = now.strftime('%Y-%m-%d')
-    cursor = mysql.connection.cursor()
-    query = "select * from parking_log where date_in = %s order by time_in DESC,date_in DESC"
-    cursor.execute(query, (today,))
-    resultt = cursor.fetchall()
-    return render_template('transaction.html', result=resultt, data=[{'in_out': 'เข้า'}, {'in_out': 'ออก'}], type=[{'typecar': 'รถยนต์ส่วนบุคคล'}, {'typecar': 'รถแท๊กซี่'}, {'typecar': 'รถจักรยานยนต์'}])
+    return transaction()
 
 
 # Export to Excel :: Transaction
@@ -706,12 +718,12 @@ def memberdetail():
         limit = 10
         offset = page*limit-limit
         cursor = mysql.connection.cursor()
-        cursor.execute("select * from member where member_type='Member'")
+        cursor.execute("select * from member where type='Member'")
 
         result = cursor.fetchall()
         total = len(result)
         cur = mysql.connection.cursor()
-        que = "select * from member where member_type='Member' LIMIT %s OFFSET %s"
+        que = "select * from member where type='Member' LIMIT %s OFFSET %s"
         cur.execute(que, (limit, offset))
         data = cur.fetchall()
         cur.close()
@@ -723,149 +735,183 @@ def memberdetail():
         limit2 = 10
         offset2 = page2*limit2-limit2
         cursor2 = mysql.connection.cursor()
-        cursor2.execute("select * from member where member_type ='VIP'")
+        cursor2.execute("select * from member where type ='VIP'")
 
         result2 = cursor.fetchall()
         total2 = len(result2)
         cur2 = mysql.connection.cursor()
-        que2 = "select * from member where member_type ='VIP' LIMIT %s OFFSET %s"
+        que2 = "select * from member where type ='VIP' LIMIT %s OFFSET %s"
         cur2.execute(que2, (limit, offset2))
         data2 = cur2.fetchall()
         cur2.close()
         pagination2 = Pagination(page2=page2, per_page=limit2, total=total2, record_name2='vdetail', css_framework='bootstrap4')
 
-        return render_template('member-detail.html', pagination=pagination, mdetail=data, pagination2=pagination2, vdetail=data2)
+        cursor = mysql.connection.cursor()
+        query = "SELECT * FROM member_package "
+        cursor.execute(query)
+        result = cursor.fetchall()
 
-
-@app.route('/addmember', methods=["POST", "GET"])
-def addmember():
-    cursor = mysql.connection.cursor()
-    query = "select * from member where member_type ='Member'"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    cursor2 = mysql.connection.cursor()
-    title_name = request.form.get('title_name')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    phone = request.form.get('phone')
-    license_plate = request.form.get('license_plate')
-    province = request.form.get('province_')
-    member_package = request.form.get('member_package')
-    # position = request.form.get('position')
-    cursor2 = mysql.connection.cursor()
-    sql = "INSERT INTO member(id, title_name, first_name, last_name, phone, license_plate, province, member_package) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    val = (title_name, first_name, last_name, phone,
-           license_plate, province, member_package)
-    cursor2.execute(sql, val)
-    mysql.connection.commit()
-    cursor2.close()
-    return render_template('member-detail.html', result=result)
-
-
-@app.route('/remember', methods=["POST", "GET"])
-def remember():
-    cursor2 = mysql.connection.cursor()
-    id = request.values.get('id')
-    title_name = request.values.get('title_name_')
-    first_name = request.values.get('first_name_')
-    last_name = request.values.get('last_name_')
-    phone = request.values.get('phone_')
-    license_plate = request.values.get('license_plate_')
-    province = request.values.get('province_')
-    member_package = request.values.get('member_package_')
-    position = request.values.get('position_')
-    remark = request.values.get('remark_')
-
-    sql = "UPDATE member SET title_name=%s, first_name=%s, last_name=%s, phone=%s, license_plate=%s, province=%s, member_package= %s, position= %s, remark= %s WHERE id = %s"
-    val = (title_name, first_name, last_name, phone, license_plate,
-           province, member_package, position, remark, id)
-    cursor2.execute(sql, val)
-    mysql.connection.commit()
-    cursor2.close()
-    cursor = mysql.connection.cursor()
-    query = "select * from member where type='VIP'"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return render_template('member-detail.html', result=result)
-
-
-@app.route('/editmember', methods=["POST", "GET"])
-def editmember():
-    cursor2 = mysql.connection.cursor()
-    id = request.values.get('id')
-    title_name = request.values.get('title_name_')
-    first_name = request.values.get('first_name_')
-    last_name = request.values.get('last_name_')
-    phone = request.values.get('phone_')
-    license_plate = request.values.get('license_plate_')
-    province = request.values.get('province_')
-    member_package = request.values.get('member_package_')
-    position = request.values.get('position_')
-    remark = request.values.get('remark_')
-
-    sql = "UPDATE member SET title_name=%s, first_name=%s, last_name=%s, phone=%s, license_plate=%s, province=%s, member_package= %s, position= %s, remark= %s WHERE id = %s"
-    val = (title_name, first_name, last_name, phone, license_plate,
-           province, member_package, position, remark, id)
-    cursor2.execute(sql, val)
-    mysql.connection.commit()
-    cursor2.close()
-    cursor = mysql.connection.cursor()
-    query = "select * from member where type='VIP'"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return render_template('member-detail.html', result=result)
+        return render_template('member-detail.html', pagination=pagination, mdetail=data, pagination2=pagination2, vdetail=data2, result=result )
 
 
 @app.route('/addvip', methods=["POST", "GET"])
 def addvip():
-    cursor = mysql.connection.cursor()
-    query = "select * from member where type='VIP'"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    cursor2 = mysql.connection.cursor()
     title_name = request.form.get('title_name')
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     phone = request.form.get('phone')
     license_plate = request.form.get('license_plate')
-    province = request.form.get('province_')
-    member_package = request.form.get('member_package')
-    # position = request.form.get('position')
+    province = request.form.get('province')
+    car_type = request.form.get('car_type')
+    modify_by= session['username']
+    insert_date = now
+    member_type = 'VIP'
+    pay_date = date
+
+    cursor = mysql.connection.cursor()
+    sql = "INSERT INTO member(title_name, first_name,last_name, type, phone,car_type, license_plate, pay_date, province,modify_by,insert_date) VALUES  (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+    val = (title_name, first_name,last_name,member_type, phone,car_type, license_plate, pay_date, province,modify_by,insert_date)
+    cursor.execute(sql, val)
+    mysql.connection.commit()
+    cursor.close()
+
+    return memberdetail()
+
+
+@app.route('/addmember', methods=['POST', "GET"])
+def addmember():
+    title_name = request.form.get('title_name')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    phone = request.form.get('phone')
+    license_plate = request.form.get('license_plate')
+    province = request.form.get('province')
+    car_type = request.form.get('car_type')
+    modify_by= session['username']
+    insert_date = now
+    member_type = 'member'
+    pay_date = date
+
     cursor2 = mysql.connection.cursor()
-    sql = "INSERT INTO member(id, title_name, first_name, last_name, phone, license_plate, province, member_package) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    val = (title_name, first_name, last_name, phone,
-           license_plate, province, member_package)
+    sql = "INSERT INTO member(title_name, first_name,last_name, type, phone,car_type, license_plate, pay_date, province,modify_by,insert_date) VALUES  (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+    
+    val = (title_name, first_name,last_name,member_type, phone,car_type, license_plate, pay_date, province,modify_by,insert_date)
     cursor2.execute(sql, val)
     mysql.connection.commit()
     cursor2.close()
-    return render_template('member-detail.html', result=result)
+    
+    return memberdetail()
+    
+    
+@app.route('/remember', methods=["POST", "GET"])
+def remember():
+    cursor2 = mysql.connection.cursor()
+    mem_no = request.values.get('memberno')
+    title_name = request.values.get('title_name')
+    first_name = request.values.get('first_name')
+    last_name = request.values.get('last_name')
+    phone = request.values.get('phone')
+    license_plate = request.values.get('license_plate')
+    province = request.values.get('province')
+    member_package = request.values.get('member_package')
+    position = request.values.get('position')
+    remark = request.values.get('remark')
+    sql = "UPDATE member SET title_name=%s, first_name=%s, last_name=%s, phone=%s, license_plate=%s, province=%s, member_package= %s, position= %s, remark= %s WHERE mem_no = %s"
+    print(mem_no,' ',sql)
+    val = (title_name, first_name, last_name, phone, license_plate,province, member_package, position, remark, mem_no)
+    cursor2.execute(sql, val)
+    mysql.connection.commit()
+    cursor2.close()
+
+    return memberdetail()
 
 
 @app.route('/editvip', methods=["POST", "GET"])
 def editvip():
     cursor2 = mysql.connection.cursor()
-    id = request.values.get('id')
-    title_name = request.values.get('title_name_')
-    first_name = request.values.get('first_name_')
-    last_name = request.values.get('last_name_')
-    phone = request.values.get('phone_')
-    license_plate = request.values.get('license_plate_')
-    province = request.values.get('province_')
-    member_package = request.values.get('member_package_')
-    position = request.values.get('position_')
-    remark = request.values.get('remark_')
-
-    sql = "UPDATE member SET title_name=%s, first_name=%s, last_name=%s, phone=%s, license_plate=%s, province=%s, member_package= %s, position= %s, remark= %s WHERE id = %s"
-    val = (title_name, first_name, last_name, phone, license_plate,
-           province, member_package, position, remark, id)
+    mem_no = request.values.get('vip_memberno')
+    title_name = request.values.get('title_name')
+    first_name = request.values.get('first_name')
+    last_name = request.values.get('last_name')
+    phone = request.values.get('phone')
+    license_plate = request.values.get('license_plate')
+    province = request.values.get('province')
+    member_package = request.values.get('member_package')
+    position = request.values.get('position')
+    remark = request.values.get('remark')
+    sql = "UPDATE member SET title_name=%s, first_name=%s, last_name=%s, phone=%s, license_plate=%s, province=%s, member_package= %s, position= %s, remark= %s WHERE mem_no = %s"
+    val = (title_name, first_name, last_name, phone, license_plate,province, member_package, position, remark, mem_no)
     cursor2.execute(sql, val)
     mysql.connection.commit()
     cursor2.close()
+
+    return memberdetail()
+
+@app.route('/editmember', methods=["POST", "GET"])
+def editmember():
+    cursor2 = mysql.connection.cursor()
+    mem_no = request.values.get('memberno')
+    title_name = request.values.get('title_name')
+    first_name = request.values.get('first_name')
+    last_name = request.values.get('last_name')
+    phone = request.values.get('phone')
+    license_plate = request.values.get('license_plate')
+    province = request.values.get('province')
+    member_package = request.values.get('member_package')
+    position = request.values.get('position')
+    remark = request.values.get('remark')
+    sql = "UPDATE member SET title_name=%s, first_name=%s, last_name=%s, phone=%s, license_plate=%s, province=%s, member_package= %s, position= %s, remark= %s WHERE mem_no = %s"
+    print(mem_no,' ',sql)
+    val = (title_name, first_name, last_name, phone, license_plate,province, member_package, position, remark, mem_no)
+    cursor2.execute(sql, val)
+    mysql.connection.commit()
+    cursor2.close()
+
+    return memberdetail()
+    return render_template('member-detail.html')
+
+@app.route('/editmember/json')
+def editmember_json():
+    mem_no = request.args.get('mem_no')
     cursor = mysql.connection.cursor()
-    query = "select * from member where type='VIP'"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return render_template('member-detail.html', result=result)
+    sql = "select id, mem_no, title_name, first_name ,phone ,car_type ,license_plate ,province ,last_name from member where type ='Member' and mem_no = %s"
+    val = (mem_no,)
+    cursor.execute(sql,val)
+    result = cursor.fetchone()
+
+    payload = []
+    content = {}
+    content = {'id': result[0], 'mem_no' : result[1], 'title_name' : result[2], 'first_name': result[3], 'phone': result[4], 'car_type': result[5], 'license_plate' : result[6], 'province' : result[7] ,'last_name': result[8]}
+    return content
+
+@app.route('/renewmember/json')
+def renewmember_json():
+    mem_no = request.args.get('mem_no')
+    cursor = mysql.connection.cursor()
+    sql = "select id, mem_no, title_name, first_name ,phone ,car_type ,license_plate ,province ,last_name from member where type ='Member' and mem_no = %s"
+    val = (mem_no,)
+    cursor.execute(sql,val)
+    result = cursor.fetchone()
+
+    payload = []
+    content = {}
+    content = {'id': result[0], 'mem_no' : result[1], 'title_name' : result[2], 'first_name': result[3], 'phone': result[4], 'car_type': result[5], 'license_plate' : result[6], 'province' : result[7] ,'last_name': result[8]}
+    return content
+
+@app.route('/editvip/json')
+def editvip_json():
+    mem_no = request.args.get('mem_no')
+    cursor = mysql.connection.cursor()
+    sql = "select id, mem_no, title_name, first_name ,phone ,car_type ,license_plate ,province ,last_name from member where type ='VIP' and mem_no = %s"
+    val = (mem_no,)
+    cursor.execute(sql,val)
+    result = cursor.fetchone()
+
+    payload = []
+    content = {}
+    content = {'id': result[0], 'mem_no' : result[1], 'title_name' : result[2], 'first_name': result[3], 'phone': result[4], 'car_type': result[5], 'license_plate' : result[6], 'province' : result[7] ,'last_name': result[8]}
+
+    return content
 
 
 @app.route('/newmember-receipt')
@@ -882,7 +928,6 @@ def logout():
     mycursor = mysql.connection.cursor()
     now = datetime.now()
     logout_date = now.strftime('%Y-%m-%d %H:%M:%S')
-    print(session['username'])
     sql = "UPDATE login_history SET status = 'signed out', logout_date= %s WHERE user_name = %s"
     val = (logout_date, session['username'])
     mycursor.execute(sql, val)
@@ -913,25 +958,24 @@ def receipt():
         tax_id = result[1]
         pos_id = result[2]
         reg_id = result[3]
-
-        cashier_box = cashier_box = result[5]
+        receipt_no = result[7]
+        cashier_box = result[5]
         today_date_time = result[6]
         now = datetime.now()
-        no = year+month+day
         date_now = now.strftime('%Y-%m-%d %H:%M:%S')
         license_plate= result[8]
         time_in = str(result[11])
         date_in = str(result[9])
         time_out = str(result[12])
         date_out = str(result[10])
-
+        total_time = str(result[13])
         receieve = result[12]
         discount = result[13]
         changess = result[14]
         amount = result[15]
         fines = result[16]
     
-    return render_template('comp/receipt.html', no=no, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve)
+    return render_template('comp/receipt.html', receipt_no=receipt_no, total_time=total_time,date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve)
 
 
 @app.route('/receipt_two')
@@ -944,25 +988,24 @@ def receipt_two():
         tax_id = result[1]
         pos_id = result[2]
         reg_id = result[3]
-
-        cashier_box = cashier_box = result[5]
+        receipt_no = result[7]
+        cashier_box = result[5]
         today_date_time = result[6]
         now = datetime.now()
-        no = year+month+day
         date_now = now.strftime('%Y-%m-%d %H:%M:%S')
         license_plate= result[8]
         time_in = str(result[11])
         date_in = str(result[9])
         time_out = str(result[12])
         date_out = str(result[10])
-
+        total_time = str(result[13])
         receieve = result[12]
         discount = result[13]
         changess = result[14]
         amount = result[15]
         fines = result[16]
 
-    return render_template('comp/receipt_two.html', no=no, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve)
+    return render_template('comp/receipt_two.html', receipt_no=receipt_no, total_time=total_time, date_now=date_now, tax_id=tax_id ,pos_id=pos_id,reg_id=reg_id,today_date_time=today_date_time,cashier_box=cashier_box ,license_plate=license_plate ,amount=amount ,time_out=time_out ,date_out=date_out ,date_in=date_in ,time_in=time_in ,discount=discount,fines=fines ,changess=changess ,receieve=receieve)
 
 
 
@@ -1047,15 +1090,33 @@ def shift():
         return render_template('reports/shift-report.html', car_in=car_in, stale=stale, discount=discount, count=count, amount=amount, datein=datein, user=user, date_time=date_time)
 
 
-@app.route('/report/table-car')
-def table_car():
-    return render_template('table-report/table_car.html')
+# @app.route('/report/table-car')
+# def table_car():
+#     return render_template('table-report/table_car.html')
 
+
+def car_datatable_sql(date_start, date_end):
+
+    sql = "select id, type, license_plate, time_in, cashier, time_out, time_total, time_promotion, time_discount, time_grand, fines, amount, discount from parking_log "
+
+    if date_start == None and date_end != None :
+        sql = "select id, type, license_plate, time_in, cashier, time_out, time_total, time_promotion, time_discount, time_grand, fines, amount, discount from parking_log where date_in <= "+"'"+date_end+"'"
+    
+    elif date_start != None and date_end == None :
+        sql = "select id, type, license_plate, time_in, cashier, time_out, time_total, time_promotion, time_discount, time_grand, fines, amount, discount from parking_log where date_in >= "+"'"+date_start+"'"
+    
+    elif date_start != None and date_end != None :
+        sql = "select id, type, license_plate, time_in, cashier, time_out, time_total, time_promotion, time_discount, time_grand, fines, amount, discount from parking_log where date_in BETWEEN "+"'"+date_start+"'"+" and "+"'"+date_end+"'"
+
+    return sql 
 
 @app.route('/report/table-car/datatable')
 def table_car_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select id, member_type, license_plate, time_in, cashier, time_out, time_total, time_promotion, time_discount, time_grand, fines, amount, discount from parking_log'
+    date_start = request.args.get('date_start')
+    date_end = request.args.get('date_end')
+
+    sql = car_datatable_sql(date_start, date_end)
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1066,12 +1127,66 @@ def table_car_datatable():
         out.append(newelement)
     data = jsonify({'data': out})
     return data
+
+
+def out_datatable_sql(date_start, date_end):
+
+    sql = "select id, member_type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = "" "
+    
+    if date_start == None and date_end != None :
+        sql = "select id, type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = '' and date_in <= "+"'"+date_end+"'"
+    
+    elif date_start != None and date_end == None :
+        sql = "select id, type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = '' and date_in >= "+"'"+date_start+"'"
+    
+    elif date_start != None and date_end != None :
+        sql = "select id, type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = '' and date_in BETWEEN "+"'"+date_start+"'"+" and "+"'"+date_end+"'"
+
+    return sql 
+
+@app.route('/report/outcar/datatable')
+def table_out_datatable():
+    cursor = mysql.connection.cursor()
+    date_start = request.args.get('date_start')
+    date_end = request.args.get('date_end')
+
+    sql = out_datatable_sql(date_start, date_end)
+    # select id, member_type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = "" AND date_in = '2021-01-19'
+    cursor.execute(sql)
+    info = cursor.fetchall()
+    out = []
+    for element in info:
+        newelement = []
+        for x in element:
+            newelement.append(str(x))
+        out.append(newelement)
+    data = jsonify({'data': out})
+    return data
+
+
+def salestax_datatable_sql(date_start, date_end):
+  
+    sql = "select receipt.id, receipt.tax_id, member.card_no, receipt.license_plate, date(receipt.datetime_in), time(receipt.datetime_in), receipt.cashier, receipt.cashier_box, date(receipt.datetime_out), time(receipt.datetime_out), receipt.fines, receipt.amount, receipt.vat, receipt.total from receipt inner join member on receipt.id = member.id "
+    
+    if date_start == None and date_end != None :
+        sql = "select id, type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = '' and date_in <= "+"'"+date_end+"'"
+    
+    elif date_start != None and date_end == None :
+        sql = "select id, type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = '' and date_in >= "+"'"+date_start+"'"
+    
+    elif date_start != None and date_end != None :
+        sql = "select id, type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = '' and date_in BETWEEN "+"'"+date_start+"'"+" and "+"'"+date_end+"'"
+
+    return sql 
 
 
 @app.route('/report/table-salestax/datatable')
 def table_salestax_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select receipt.id, receipt.tax_id, member.card_no, receipt.license_plate, date(receipt.datetime_in), time(receipt.datetime_in), receipt.cashier, receipt.cashier_box, date(receipt.datetime_out), time(receipt.datetime_out), receipt.fines, receipt.amount, receipt.vat, receipt.total from receipt inner join member on receipt.id = member.id'
+    date_start = request.args.get('date_start')
+    date_end = request.args.get('date_end')
+
+    sql = salestax_datatable_sql(date_start, date_end)
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1083,29 +1198,30 @@ def table_salestax_datatable():
     data = jsonify({'data': out})
     return data
 
-# ต้องกำหนดเงื่อนไขก่อน
 
+def staff_datatable_sql(date_start, date_end):
 
-@app.route('/report/table-vat/datatable')
-def table_vat_datatable():
-    cursor = mysql.connection.cursor()
-    sql = 'select id, member_type, license_plate, timestamp(date_in, time_in) as datetime from parking_log where licenplate_out = ""'
-    cursor.execute(sql)
-    info = cursor.fetchall()
-    out = []
-    for element in info:
-        newelement = []
-        for x in element:
-            newelement.append(str(x))
-        out.append(newelement)
-    data = jsonify({'data': out})
-    return data
+    sql = "select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date)) as amount, discount from login_history"
+    
+    if date_start == None and date_end != None :
+        sql = "select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date)) as amount, discount from login_history WHERE pay_date <= "+"'"+date_end+"'"
+    
+    elif date_start != None and date_end == None :
+        sql = "select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date)) as amount, discount from login_history WHERE pay_date >= "+"'"+date_start+"'"
+    
+    elif date_start != None and date_end != None :
+        sql = "select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date)) as amount, discount from login_histor  where pay_date BETWEEN "+"'"+date_start+"'"+" and "+"'"+date_end+"'"
+
+    return sql 
 
 
 @app.route('/report/table-staff/datatable')
 def table_staff_datatable():
     cursor = mysql.connection.cursor()
-    sql = 'select id, user_name, login_date, logout_date, time(hour(login_date))+time(hour(logout_date)) as amount, discount from login_history'
+    date_start = request.args.get('date_start')
+    date_end = request.args.get('date_end')
+
+    sql = staff_datatable_sql(date_start, date_end)
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1116,12 +1232,31 @@ def table_staff_datatable():
         out.append(newelement)
     data = jsonify({'data': out})
     return data
+
+
+def member_income_datatable_sql(date_start, date_end):
+
+    sql = "select id,first_name, license_plate,member_receipt_no, pay_date, expiry_date ,amount_package ,cashier  from member"
+    
+    if date_start == None and date_end != None :
+        sql = "select id,first_name, license_plate,member_receipt_no, expiry_date ,amount_package ,cashier  from member WHERE pay_date <= "+"'"+date_end+"'"
+    
+    elif date_start != None and date_end == None :
+        sql = "select id, concat(first_name, " ", last_name) as name, license_plate,member_receipt_no, expiry_date ,amount_package ,cashier from member WHERE pay_date >= "+"'"+date_start+"'"
+    
+    elif date_start != None and date_end != None :
+        sql = "select id, concat(first_name, " ", last_name) as name, license_plate,member_receipt_no, pay_date ,expiry_date ,amount_package ,cashier from member  where pay_date BETWEEN "+"'"+date_start+"'"+" and "+"'"+date_end+"'"
+
+    return sql    
 
 
 @app.route('/report/table_member_income/datatable')
 def table_member_datatable():
+    date_start = request.args.get('date_start')
+    date_end = request.args.get('date_end')
+    
     cursor = mysql.connection.cursor()
-    sql = 'select id, concat(first_name, " ", last_name) as fname, license_plate, member_receipt_no, pay_date, expiry_date, grand_amount, cashier from member'
+    sql = member_income_datatable_sql(date_start, date_end)
     cursor.execute(sql)
     info = cursor.fetchall()
     out = []
@@ -1132,6 +1267,41 @@ def table_member_datatable():
         out.append(newelement)
     data = jsonify({'data': out})
     return data
+
+
+def amount_datatable_sql(date_start, date_end):
+
+    sql = "select id, license_plate, time_in, date_in, time_out, date_out, amount, excluding_vat,vat from parking_log"
+    
+    if date_start == None and date_end != None :
+        sql = "select id, license_plate, time_in, date_in, time_out, date_out, amount, excluding_vat,vat from parking_log WHERE date_in <= "+"'"+date_end+"'"  
+    
+    elif date_start != None and date_end == None :
+        sql = "select id, license_plate, time_in, date_in, time_out, date_out, amount, excluding_vat,vat from parking_log WHERE date_in >= "+"'"+date_start+"'" 
+    
+    elif date_start != None and date_end != None :
+        sql = "select id, license_plate, time_in, date_in, time_out, date_out, amount, excluding_vat,vat from parking_log  where date_in BETWEEN "+"'"+date_start+"'"+" and "+"'"+date_end+"'"
+
+    return sql     
+
+@app.route('/report/table_amount/datatable')
+def table_amount_datatable():
+    cursor = mysql.connection.cursor() 
+    date_start = request.args.get('date_start')
+    date_end = request.args.get('date_end')
+    
+    sql = amount_datatable_sql(date_start, date_end)
+    cursor.execute(sql)
+    info = cursor.fetchall()
+    out = []
+    for element in info:
+        newelement = []
+        for x in element:
+            newelement.append(str(x))
+        out.append(newelement)
+    data = jsonify({'data': out})
+    return data
+
 
 if __name__ == "__main__":
     app.run(debug=True)

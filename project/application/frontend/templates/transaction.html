@@ -16,7 +16,7 @@
                     <div class="col-lg-12">
                         <div class="row my-2">
                             <div class="col">
-                                <h4 class="text-blue">รายการรถเข้า-ออกสะสม {{roles}}</h4>
+                                <h4 class="text-blue">รายการรถเข้า-ออกสะสม</h4>
                                 <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModal">
                                     <i class="fas fa-plus"></i> เพิ่ม
                                 </button>
@@ -57,8 +57,7 @@
                                                         <label for="province" class="form-label col-2">จังหวัด<span
                                                                 class="text-red">*</span> </label>
                                                         <input type="text" class="form-control-modal col-9"
-                                                            name="province" value="{{
-                                                            request.form.province }}" required>
+                                                            name="province" value="{{request.form.province }}" required>
                                                     </div>
                                                     <div class="row mb-3">
                                                         <label for="date" class="form-label col-2">วันที่ <span
@@ -148,9 +147,9 @@
                                     <td>{{ row[0] }}</td>
                                     <!-- <td>{{ loop.index + pagination.skip }}</td> -->
                                     <td>{{ row[7] }}</td>
-                                    <td>{{ row[14] }}</td>
-                                    <td>{{ row[18] }}</td>
-                                    <td>{{ row[19] }}</td>
+                                    <td>{{ row[8] }}</td>
+                                    <td>{{ row[9] }}</td>
+                                    <td>{{ row[17] }}</td>
                                     <td>{{ row[27] }}</td>
                                     <td>{{ row[3] }}</td>
                                     <td>{{ row[4] }}</td>
@@ -165,12 +164,12 @@
                                     <td></td>
                                     <td></td>
                                     <td>
-                                        {% if roles != "Groupleader" %}
-                                        <button data-id="{{ row[0] }}" type="button" id="button1"
-                                            class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+
+                                        <button data-tran-id="{{ row[0] }}" type="button" id="button1"
+                                            class="btn btn-primary tran-id" data-toggle="modal" data-target="#editModal">
                                             <i class="fas fa-edit"></i> แก้ไข
                                         </button>
-                                        {% endif %}
+
                                         <!-- Modal -->
                                         <div class="modal fade" id="editModal" tabindex="-1"
                                             aria-labelledby="editModalLabel" aria-hidden="true">
@@ -183,32 +182,32 @@
                                                             aria-label="Close"></button>
                                                     </div>
 
-                                                    <form action="{{url_for('edit')}}" method="POST">
+                                                    <form action="{{url_for('edit')}}" method="POST" id="tranForm">
                                                         <div class="modal-body">
                                                             <div class="row mb-3">
                                                                 <label class="form-label col-2">Id:</label>
                                                                 <input type="text" class="form-control-modal col-9"
-                                                                    name='id' id='id' readonly>
+                                                                    name='id' id='id_tran' value="" required readonly>
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <label for="carregis_"
                                                                     class="form-label col-2">ทะเบียนรถ</label>
                                                                 <input type="text" class="form-control-modal col-9"
-                                                                    name="carregis_" value="{{request.form.carregis_}}"
+                                                                id="license_plate" name="license_plate" value=""
                                                                     required>
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <label for="province_"
                                                                     class="form-label col-2">จังหวัด</label>
                                                                 <input type="text" class="form-control-modal col-9"
-                                                                    name="province_" value="{{request.form.province_}}"
+                                                                id="province" name="province" value=""
                                                                     required>
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <label for="typecar_"
                                                                     class="form-label col-2">ประเภทรถ</label>
                                                                 <select class="form-select form-select-sm col-9"
-                                                                    name="typecar_">
+                                                                id="car_type" name="car_type">
                                                                     {% for t in type %}
                                                                     <option value="{{ t.typecar }}">{{ t.typecar }}
                                                                     </option>
@@ -240,6 +239,15 @@
         </div>
     </div>
     <script>
+        $( ".btn-primary.tran-id" ).click(function() {
+            var mem_no = $(this).attr('data-tran-id');
+            $.getJSON("/transaction/json?mem_no=" + mem_no, function(data) {
+                $("#tranForm #id_tran").val(data.id);
+                $("#tranForm #car_type").val(data.car_type);
+                $("#tranForm #province").val(data.province);
+                $("#tranForm #license_plate").val(data.license_plate);
+            });
+        });
 
         $('#modal-confirm').click(function () {
             // Perform the action after modal confirm button is clicked.

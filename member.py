@@ -14,14 +14,14 @@ mydb = mysql.connector.connect(
 def member():
     mycursor_member = mydb.cursor()
     mycursor_member.execute(
-        "select member.expiry_date, member.member_type, member.license_plate FROM member INNER JOIN test_log ON member.license_plate = test_log.license_plate WHERE test_log.gate = 0 ORDER BY date_out DESC, time_out DESC LIMIT 1")
+        "select member.expiry_date, member.type, member.license_plate FROM member INNER JOIN test_log ON member.license_plate = test_log.license_plate WHERE test_log.gate = 0 ORDER BY date_out DESC, time_out DESC LIMIT 1")
     myresult = mycursor_member.fetchall()
 
     if len(myresult) == 0:
         return cal_Price()
 
     for (expiry_date, type, license_plate) in myresult:
-        if type == 'member':
+        if type == 'Member':
             expiry_year = expiry_date.year
             expiry_month = expiry_date.month
             expiry_day = expiry_date.day
@@ -50,4 +50,4 @@ def member():
             return price,vat,excluding_vat
     return 'error'
 
-# print(member())
+print(member())

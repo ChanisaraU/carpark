@@ -32,12 +32,13 @@
 
                     <input type="text" placeholder="ค้นหา" class="form-control" id="myInputTextField">
                     <select class="form-select" id="mySelect" name="reports">
-                      <option value="">รายงาน</option>
+                      <option value="" >รายงาน</option>
                       <option value="car">รายงานการเข้าออกของรถ</option>
                       <option value="salestax">รายงานภาษีขาย</option>
                       <option value="outcar">รายงานรถค้าง</option>
                       <option value="staff">รายงานการทำงานของเจ้าหน้าที่</option>
                       <option value="member_income">รายงานรายได้จากสมาชิก (Member)</option>
+                      <option value="amount">รายงานยอดเงินประจำวัน</option>
                     </select>
                     <button class="btn btn-primary test"><i class="fas fa-stream"></i> แสดงผล</button>
                   </div>
@@ -47,19 +48,22 @@
                       <label class="form-label mb-0">เริ่มวันที่</label>
                       <input type="date" class="form-control" id="date_start" name="date_start">
                     </div>
+
                     <div class="col-lg-2">
                       <label class="form-label mb-0">ถึงวันที่</label>
                       <input type="date" class="form-control" id="date_end" name="date_end">
                     </div>
+
                     <div class="col-lg-2">
                       <label class="form-label mb-0">ประเภทสมาชิก</label>
-                      <select class="form-select" id="search">
-                        <option selected>-- ค้นหาสมาชิก --</option>
-                        <option value="1">Member</option>
-                        <option value="2">VIP</option>
-                        <option value="3">Vistor</option>
+                      <select class="form-select" id="search" name="member">
+                        <option selected distable >-- ค้นหาสมาชิก --</option>
+                        <option value="Member">Member</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Vistor">Vistor</option>
                       </select>
                     </div>
+                    
                     <div class="col-lg mt-4 mb-3">
                       <button type="reset" class="btn-clear-all mr-2">Clear All</button>
                       <span id="exportbtn"></span>
@@ -164,7 +168,7 @@
           ],
 					"processing": true,
 					"ajax": {
-            url: "{{api}}", // "{{api}}{{api_param}} /report/table-car/datatable?date_in=aaaa&date_out=aaa&type=aaa
+            url: "{{api}}{{api_param}}".replace(/&amp;/g, "&"), // "{{api}}{{api_param}} /report/table-car/datatable?date_in=aaaa&date_out=aaa&type=aaa
 						dataSrc: "data"
 					}
 				}
@@ -194,13 +198,6 @@
     function calldropdown(mySelect) {
       document.getElementById("areatodisplay").innerHTML = mySelect;
     }
-
-    // $(function() {
-    //     $('.test').on('click', function() {
-    //         var selected = $('#mySelect option:selected');
-    //         alert(selected.val()); 
-    //     });
-    // });
 
     // ควบคุม Sidebar
     $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {

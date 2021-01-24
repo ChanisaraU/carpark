@@ -119,3 +119,5 @@ def cal_vat(vat):
     mycursor.execute(sql_parking, val)
     mydb.commit()
     mycursor.close()
+    
+print(cal_Price())    
