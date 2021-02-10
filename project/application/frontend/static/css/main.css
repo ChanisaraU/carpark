@@ -38,6 +38,9 @@ tr {
 .text-blue {
   color: #080071;
 }
+.text-blue2 {
+  color: #0800ff;
+}
 .text-black {
   color: #121212;
 }
@@ -239,9 +242,18 @@ tr {
 /* --------------------------------------------------------------------------------------- */
 .img-calc {
   width: calc(100% - 0px);
+  border: 1px solid #000;
+  height: 30vh;
 }
 .img-calc-2 {
-  width: calc(100% - 10px);
+  width: calc(100% - 0px);
+  border: 1px solid #000;
+  height: 20vh;
+}
+.img-calc-3 {
+  width: calc(100% - 0px);
+  border: 1px solid #000;
+  height: 35vh;
 }
 /* --------------------------------------------------------------------------------------- */
 div.dataTables_wrapper div.dataTables_info {
@@ -379,4 +391,36 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   line-height: 1.5;
   border-radius: 0.35rem;
   cursor: pointer;
+}
+
+.btn-check2 {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+.btn-check2:active + .btn-outline-money,
+.btn-check2:checked + .btn-outline-money,
+.btn-outline-money.active,
+.btn-outline-money.dropdown-toggle.show,
+.btn-outline-money:active {
+  color: #fff;
+  background-color: #1b3e6c;
+  border-color: #1b3e6c;
+}
+
+.btn-outline-money {
+  color: #7b7b7b;
+  background-color: #e7e7e7;
+  border-color: #e7e7e7;
+  text-align: center;
+  padding: 0.375rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.width-btn-money {
+  flex: 0 0 auto;
+  width: 32.5%;
 }

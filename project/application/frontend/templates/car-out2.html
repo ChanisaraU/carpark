@@ -3,9 +3,29 @@
 
 <head>
     <title>J-Parking Management</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
     {% include "comp/includecss.html" %}
 </head>
 
+<style media="screen">
+    .noPrint {
+        display: block;
+    }
+
+    .yesPrint {
+        display: block !important;
+    }
+</style>
+<style media="print">
+    .noPrint {
+        display: none;
+    }
+
+    .yesPrint {
+        display: block !important;
+    }
+</style>
 
 <body id="page-top">
     <div id="wrapper">
@@ -16,7 +36,7 @@
                 {% include "comp/header.html" %}
 
                 <div class="container-fluid">
-                    <div class="row text-center">
+                    <div class="row text-center" style="zoom:80%">
                         <div class="col-lg-4">
                             <div class="card shadow">
                                 <div class="card-body">
@@ -68,136 +88,157 @@
                         </div>
                     </div>
 
-                    <div class="row align-items-center">
+                    <div class="row mt-3">
                         <div class="col-lg-5">
-                            <!-- <img src="{{ url_for('video_feed', id='2') }}" class="img-calc">
+                            <img src="{{ url_for('video_feed', id='1') }}" class="img-calc">
                             <div class="row mt-2">
                                 <div class="col">
-                                    <img src="data:image/jpeg;base64,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" class="img-calc">
-                                    <p class="text-center">รูปขาเข้า</p>
+                                    <img id="img_in" class="img-calc-2">
+                                    <p class="text-center mb-0">รูปขาเข้า</p>
                                 </div>
                                 <div class="col">
-                                    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxESEhUSEhIVFRUWFxUVFRcXFxUXFhcXFRUXFxUVFRUYHSggGB0lHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGhAQGy0mHx8tLS0tLS0tLS0tLS0tLS0tLS0tLS0vLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTUtLf/AABEIAMIBAwMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAADAQIEBQYABwj/xABGEAABAwIDAwgHBAkCBgMAAAABAAIDBBEFEiExQVEGExRhcYGR0SIyUpKhscFCU4LwBxUjQ1RylMLhYqIWJDOy0vFEhJP/xAAZAQADAQEBAAAAAAAAAAAAAAAAAQIDBAX/xAAvEQACAgIBAwIEBQQDAAAAAAAAAQIRAyESMUFRE2EEIqHhgZGx0fBiY3HBFDJC/9oADAMBAAIRAxEAPwDI0g5x4keLDcB9lvAdfmrXlrireYjgjbka70iL3OVp9HMd5Jue4IdJEN+/RvYNriqDFpTNO4jUeq3+VugV2WAwqK7xrbXs2LY8rZQ50T97mNceu4BPxusdUwlhDTobA9xWrrYS+mp5OEeU/hc4K4u0hNER7bt7wuIsNikRM9Hu+RRmQA7VVCBUlOPtK2p7blCEFipUTrK4ryBatZonc2OpCjkFkskostNCQ4ScEmY8UEFPDkDC86RuSioG/wAvmmNcng3RQBWuaitF9h/PcofNjs7NEoDhvv2+aVDvyT2yuH5v/lc2cbx4a/5Cjie224+ITnPB8xt800IsIpd4Nx+d6s6NgeN972IvbvWeZfaDf4HyPepdNU8dfmOBI8lQzRCkF99+P52qLimHxzMMczTY7CNLHcQeKFHU9pHapDZg4byO1AzBslqcKmu054nn8Lx9HWW+wQYdXNLxDHnI9IWsdgH0UOupGSMLHNDmHaD8+o9e1YOpgnw6YSRuJYTofo7r61nOPLa0yvY9S/4Nw9xP/KstpYi4432HsSyci6AC7aYX6i/zVDhVdBWML2N/a7XMDsgcdpLbA2d1b9qLAyMg3BZt2zEHusxc0pcerGsdllWcisPALjA7ufIP7lTN5P0Bc1giuNn/AFpL3c7Ugl2ugGiFPikUYtmm4ejMTt2bQFHixBjnXzTWGpu7gdo9LsUSzOuprHF2LrlDyNpGU0j2McDDFK+P03mxDS4XBOuo3qFg/I+jmIkeH84RHLbnHAata69gbbSrfFMVjbQv/aGUvHN2JGYB/onZtsCSoWDSU5bZ3ova1ozO1uGtsAL7D2KXnSYLHKmMreRdA+VxyPc8uzyATSgjnH3c4eloBmJss1X8kZGPc6ljfLC4NMbrtJsWjQEkE631KusAqqt07gGgEsdlcQLBwF2h1jsuLKdX8o6iKeGFrGMEghLmlpOUvke2QAjsFkQyuTakVPHXQyTeTVVbWmk/2+a5erc1Nuc2270Sf7lyr5TmPniSchrnX1tYd+igYcPSv3LR3gIsae465H/22RBBAW5WwNYeIdISPecQtXi0EZJbMfWPzyOdxPw2BbWKEigjB3Zj4nNb4lZN9JaTL12W8keJaTKG2yC+3aNl/iiKqkJu7ZR0vqt7wpTAolI70ewqZG7ctkQOCc0oWZPCADh6ddAaUUJgPF04PKYE8IAI2RObIhloSOB3a9R800MkByeHKLGbgEG352EJ8ElxfYdQe42TsCY12iRzARpp+eCECnApgOY4g669YR2yg7dRuO++6xUcOSuF9Rofn2jemBPjkO0G/Hj3jepcNTfz3H88CqeGc7LWI3fVp3jqUlk4Ouw8dx6iOKVBZfRuugV9K17S17btO4/n/KhQ1FtPh5HeFObUZm228O5A0zA11JLQSiSMkxk6HXj6pI2Ebitnh1bFWM5wZjKB6TGBt5LbSAdBIBtG/aF0sbZGlrhdpFiFi6iGWgmD2EmMm4I6t19zgs8mNS2XGbRtD0Jwvnmbf2msPwFkx+HMdmdBIJbC7mZcr7byAdCOxdTvhrWmUejKBne1ovzjd8jGjePtAb+3WXh1VRRWc10j33GUNZa5J01K4sqSdJHZhhKUXJXr2sgGF4AAidu3add0jqNxF8ha4a9ROxba3UmE9XwWbwLsWsl9TIxCWIXbe50ItuO3XcU+obzuRx1kZbISXA6G4BI26rUlo4BcYxwChfDtO0y/UjVNGfjxivaLBjbD/W36m6VaARM9lvg36rlvTPPdWeCMxDqU2DFANoU7BOTdNPYOqXRv4Oa0tPY66Dj3Jl9NLzeYOBFw61rjsXTfazOlRUukD5cwFgr+grSSYgNCxzdN++/wVbT0bAMjtvEHXwOh8U1sDopA4PB4bQ4HrB1CnuHYWndqQpgBAv4qvluHE96sKB99FonZLQ8HqS5laNwpj9Q4jiApjOSzT9taqF9xGfMoG9d0lo3rR/8ABkZ+38z9URnIln3o9z/Kfpe4zLmvaEx2LDc0lbOPkVHvm8GDzUiPkXBvmd3Nak4Lz+v7AYI4u7cz5ppxSTcz5r0ZnI+m3yyH3B9EWLkjSAk55DcDe0bOsBLjHyCPM2V025h8CuFVU7mn3QvU2clKPjKfx/4Rmcl6EfZee2RyKgvIzyplZVez8B80QVVT7Pjl8l6uzk1Q/dE9skn/AJIjeTdB9x/vkP8Aclyx+H/PxDZ5UyoqN7fkiCrnH7u/u+a9Wbyeof4dvfc/Mp4wCh/ho/dCXPH7/wA/EdHlPTpTthPV6bQkGIS3I5o30v6bdnWbWK9bbglF/Dxe41EZhNINkEQvb7Dd2zd1oeWHhipnkza+Q7WEcPTGnYVIjrZL7r7/AEtvaAvVhhtN9zF7jfJPbQwbRFH7jfJQ8sfDFs8tbVSnZk8T9UkzJpWmOSmL2m2rXs14EekvWG08Y2MaOwBFDQh5odl9R8jy7k3gU0ct2RzMadWkhh5t43hwOrXDQhaxvJpnOCoLS15s50YP7Nr972jrOtr9e1aZcspTt9Co5ZJ6KgXSXKmVVPvb3jyUIuCdo6IS5IFVVAjY6R+jWi5O3QdQQqSrZKwSMuWuvY2tsNjoVH5QPaKeQu2WAPe4BA5LVERpmCM+o5zTpbabj5LOUkmjZR+W/ctmuPX8EiK1v50XJ2cbWzyKroo2sYYHl7nEk7iOoj6oE9c94ax97s0F9oB3KHFK5puCQRsKtelMnGWSzZB6r9l/9LlKm112aOKfTQHFcCmbGJwQ+M2uW39G+5w3KojvcXubbtq0WEYq+neWO1b6r2HUEdnBWcnJshzKqjHOR3DslxmaQdW67QuiHzOmYtV0MZVvzG4FhwQo3EG4W/fiFDJo+MNdsILbEHfqFFqsHoni7H5fxfQq+KXsSyiocWtYPv2jb/laKkxW+w36xt7ws1UYXZxDHB44hR2Z4zvBVRlQjfMrjuIRW1xWPpK4nfY/A9qsI6k7ytlMRoxXFPFeVQNqE8VKdgXwrinCuKoRUpwqk7AvRXuTxXuVB0rrS9K60DNCMQKcMRKzwqutO6UeKKQWaMYiURuJdqzQqutOFUeKXFeAtmlGIp4xHrKzQqinirKXCI7ZpRiI4ogxEcVmRVlKKtT6cWHI1AxAcURuIDisqKtKKsKXiiOzXMrwjsqwVjm1gRG1vWVLwRDRsRKDsKhvps/pMNttwb7QqOLEDxU3DcRtLZ2x7b/iZYfEEe6spYnDaHHW0VHLYPZSvDm2BLRfaPWG07u9U3IOUhkretrvp9V6YcrhbQg7RuI7FVw8nqeIvdDGGFwOg0bc7wN3YNFzZFyS7NHXi+LSi4yXUGyQ22fJIuZE+y5VTMmlZ5TPh7Ts0Kgy0bm7rjirYORoH2IOnfqFyqbTPZyfCYpxuOiqbOZm5Hi7mC7Xb8o+yeK2PJBlRDFnOsbjq07uLws1Usytc7RrpL6ADQXvpw2BR48Sq2NEDZHZXerrx3A8CunFK1SPIyQcX8xO5avYZXZSCQQD2WGwrORzFSsNDXSgS7CderrU3EsKHOkR7AbabxfaulSfQ52iDFM7iVIZZ21POHluz4pRE8fYPctFEzF5hqMzZYoOe20Ed3kntkHELRKgsLmtt2cfNPD0wJpGXs+X+FQrDhycHIQTgnQBA5KHpiVAwgclD0MJ1kwCBycHoQanAIAKJE9siCGojWoAKHp4ehtanhiQx4elEiGWlMdC47/gpYBzNbeh9PbsuFDnp3cT8FAkiIUSkwLt+JMA2qvjx17XNJNwHH4tcPqq8td1qNK65GoJv1cDtWTkUjY03LPLobduo+GqvMK5bxSDK5rs97f6dTa5duXk1S+1wNSFq6F0cccUjmERSOEeex1/Zve/ZqbPawC/ArL/ALaK13N8OUtIdSdf5T5LlUw4ZTyND8zddfUJ7NbrlHFE6PPm1PUndJUTKU5oWfBHYs86IuP1xsANComG1xIyOOw3ad46kDGnXfZCptNVaSSMZ5JSlZOdKc+YcbrZ8npQ91nbSCO8bPmsXk3q2w6tMcjXjUAi44i62hIyki+q5WNN7i49G3Ek6eGp7ktHWyzDmowXON9nAZT8Mp8VGxKaMSZ7BzHkEW4jb2HUKdDG2MvkhYJBYPuSQGftAdx14Faym2JJFZQ4gwyjMM3EHfckn5rsfhjzuc0ZRwO7S5U/BMKYHuknsTc2DdADfW4G63zReUHNvecttW6jgQic+K0OMbdFDRUzXW9NzSeF9B2KbVUT47Fpc5uy7mgcOBPWg8xGMoc4gAtva17X1tx0utBU18Yp3RsJLXtsA8DMxwsQ7/1wKyXxHk0eF9DLtmc0n0Lgbgdhv17lzcRPOCMQyF59UDKSf5ddVOZHoRx+f5Kh1tF6rHm2YB0TwfVPs34i2zyW0MyZlLG11JeWffR1f/4OTeekG2lq/wCnl8k2Hl5VUxyyZ3WOpz3v3PBA46Wuruj/AEux3/awOtxBF/C9lr639H1+xSxa1+pTdJd/DVf9NL5LumH+Hqv6eXyWyg/Sjhztrnt/mY75i6ms/SFh5teW19+hHeAb/BHr/wBt/n9hPHXYwHTnfw1X/TyeS7p7v4Ss/p5F6MOXWGn/AOS3wd5J7OWuHnZUN8HeSX/I/tv8/sKl4PNxXybqKtP/ANeTyQKnlGIjlkpp2OtezwGOsdhs6x3Fet0vKGkkIaydhJ0Ava54aqk5QYuGVdHBzUX/ADTqiMyOaHljooxzdtNbucNDwsl66bpwa/H7CVeDz2LlU15DWQOJOgBfGL95NlewQ4i8Xbhzh/NNEB81U4Jytrn1sFLMyAEziKVrYWCxY4iUAnra4X4Le8l8RkkEskhaxtNPV08gaMrXMjcHRyEDY4NAv/M5TPLxel9f2ouq7FC3CMWdspIW/wA8/wD4AozOTGLO9Z1HH2c7J8wFY1f6TKFmgLndgFu4qmqv0uxC4jp3HgS4D4JPJkf/AJS/nuxqE/BOZyKrj69bGBwjpxf/AHvUao5CS7DUVUhuL2MMLLdwcfiqar/SzUEWjiY08dT8Csti3LOunuHzuA4N9EeAU85dZV9P9FLHW5NI2tXybwynFqmcF5vZvOSSEabL5rXvfd3Ki5L4X6ETCWte71nHYCWi9zwuVmcPo5HuDnX79vWSvQ8EjhawvqL82fR8XN6xwKmcqTYJJvjErMTghLJA2xkidq7QBzBYEtudTrsGquaCjiMdG4hoAMUjgSQHWM0Ly4k2Gpidpb1SpGOMwwNbzcxLrxluUc6QIwRlF7AXzDQn7Kh4fPSAOY5kzWFpykuDiwm5u1vab2JIXKslS3ZooOS8F+W4ez0G1bmgbAJHEC+psbHeSuWIc9l/VeesNAB6wCdEi25e7MHB31IZ2XGoTD2KDT1TmHq3hSJbOGZveFDRSkU2Jm7yiU1OX3A3DxsEKs9ZWuCMu78Lj9Pqn2ElbIrDdqPG7Yo82jnW4/NdC9NAzR9Fa9jXDRw2kb+3ik/aMBy6XFiWktJB3EbCmYTPcFvep+VdC2jPuV361maMpPi0X8QgdKO8knqFlYVMN1WPCxcEaKbCiZ7vsiw4kpQ59hZmt9ocdRwsQmRu0KPC/RRpFpt9xzap4teM6cCFGr6ouFix43g22HcRZTMybI7RONXYSlKqYDowqYwXDK+3jrvHBUtXgEjdgNuI1C0bJN42hWMTwQCF0xqRg1R5xJSOG5BdGR+bL02Wjjf6zQe7XxUCo5NxO9UlvxCfptBZ58WlNN1sZ+Sjt1j2aKOeS7+HxU1PyPl7mapap8bw5pIIIPDYvScYxIVUdJPDdz4KmGZzQCX5XOdz1gNSbvYewO4LOM5LO3g/E/VFj5PytPoFzey4WcoSbts1jl1TNXPXwx4uJRh7y45S6YNmLQ58I9MNALb2LGk/zb0Llbjr+h1jCxsTp6rK1rRZ74g1ge+T+YREXO5wCo24XVHa5/eSjHk257RmuTcnWx220uexPhLRSnBdEYYtP5KVrL/41P8AlbuLkj1f9oVhT8kOPzP0SeNvqzJys88ipHu0DbdZ29wV7hPJ4kj0ST4nw2Bb2g5LRt1J7hor6mo42CzWgBNRjEKbM3hnJwNAz+A+pV7VYNTmmfzo0Hpt1sbtBtbx2datoWtCx3KvEC+ZzAfRZZo7bAu+PyWeSd9DWMeJKwDBRKxzmBo2gDf3qnq8Mka9wt6rOcf1C9j8QfBBwzFZIHh7DbiNx6ittiFW2ejqJo2gOMJzHaSGglzfDN4rlcqZs2+vY86lh1O3wXKRG64B8kq0TMHHZmRM1+jtHe15phzMKiMIUqKfSx1H52LSzPoRauTM4FXuFQZWB/G7fkVQT2zabFoKCotFY8NEdgvZV1sRa8g79R3qNG5TsTtmbY30tqetQCLJAXGFS2cOvRX0TtFk6SSxCuTVWWsZUKiwnPBQahoKGcRjO1wBQn1TT9oeKHIaRwTmlDErTsIXZlm2USA9I510LMnZkJgEa6ymUE27vCjQx5ieCbex03KoZKY3DVl6xyM0qiZisbT6TwO0o/69px+9b8fJdayowouAUCprQxzW73ZrcPRF9fh4qoPKWD2x8VDGJMnmGU3ysd/uczyUTyaHFbNLUVbow3nHUzMwzAF0pdl9ohoNh1nRHr5zCGmSaABzS9uRkst2AAl+gPo6jXrXYfG11S0kC4w7T8UtnduwKRg0rY8HhlLS61DEDlF3EcyLADtK5vUkzo4RfY6ogkZCZ3VMQjDQ/M2LNdpsW5QDre4sOtQ5ay0bZOkSkukdEIxAGy52NLngtc7SzWk34IldQSvwWGINdnbBRlzRfPaLmnSNA25rNd3ocTpG072mKofBJNM1hGfpEcLmDIQCc1jIHjXUBwRbCkgc9fG3IRUVEjHRxTOexrAI45jljc+5vqb6DgUmIzTRyGEmpBLZnscZYy0thGryxrbhpJaNv2k/JPzdJTzU8pYyGF0/NMZZ8jLBkTjmADW5cxttNt11Z1lK4y1szwbcwyKIm2rWse95HC732/CErYcV4K+mx2RrQ297bzt8VIPKJ3ALA4/iz4CwNt6QJ16iqSTlLPxA7AE2yHI9Rnx55vbS4sqOae5JJ1JusIcenJ9c/BWcOJyPaCDY9ilgpWaIyLT8jMXbmNK97WtlDtSQNgtkbfebnwK8nqK2Uuyl5+SFc7ye/wA1Dim9m0MiVqXc32O4tTQ1EkUZL2sdlDmtDhcD0hmvrY3HcuWAzHrXI9KHv+ZDyr3+hNslDiE8tTSFZihr3XIWnwykzMjvoCDc7tLrLuC0lHUHo7e0t+qpKx3RX10OR4zA2v49ibPFGReN/a120dhGhVlyqNzGRsIWfKBBW3CnF+l1Wh5R2v0SZSIErbOI600BTJoQ7Ubd448FHdC4bWlAgdl2vFKUiNiBmVw3nxR4S465j4oQiJKnGEt2hAWNBd7TvEoclQ5o0J8Sle5RJnbkIbYBzidbpuq6wSGydkiG6ueSf/Vd/If+5qpdFJw6uML87ddLEHeD/wCkmylo95wK3Mxm2uQC9t24X4KwDhay8SbyylAsGi3C7rfNMfyxl9geLvNKjXmeu4rissbgI4hIMpN7kekNMp2AbRrfcVHjxSZz48wYxod6Yzs1BDzqS/dZgPEkryR3K2b2WjuPmgu5T1B4eCKFzPcXYlCP3rPev8lDr8RifG9jZG3c1wHrbxbh1rxU47VHf8B5Ibq+qd9t3ij/AAHMseWQIexpGoafidFmyDfYpT45XbSULojr6lDZk02Acrvk5CXnLuB1VYKJ52AlbfkLhbYv20xaBf1HXvpsJAWWWXGNo2+HhynTM5i0GWV2tuA7kOOlkdq1ht7R0b4nRejmlpnOL2te952lkd3e865CjVdAy/pRtbvvUTf2M1+Cxj8TraOmfwm7swgw475Gg95+Nly0tXicDXlrYKZwGgc2naQbDcXa+K5Wsvscbx0ykypCEQLiF00QgFlaYa+8bmdYcPkoBaiUcuV4J2b0J0AbFKglrGn7N1X3Rq+YOfps3KG8osA105rlFDilEpQBPjgLtiK2kdxVZz5XdIdxKEOy36K/2kvQjvy+AVR0t/tHxSivk9op6At/1d1M8CnsoiNlvF3yuqf9Zy+2V361l9oqrQi2lwvNsLR4qBU4Q8EhozDcUD9cTe2Un66n9so0GxDhMvsfJJ+qJfY+SU41P94Ux2Lz/eO8UvlFTFODzewmHCpfYPgU12JTH947xKY6tkO2R3iUrQbDNweb2D4FPGCy7wB22HzUJ0rjtcfFMzdZSdDRZfqdw2uYPxM805uHAbZox+IfRVlgiQZAbubm26XI7Ci0Gy0jp4B61Q3uzH+1HbJQjbJI7sHmQqS7OA8EvPN4DwStFWy8GJYe393I7tt5rjyko2+rTeLh9AqV2IAblTzkXNhZFoXI1zuWDB6lPGO0uP1Qjyyl+yyNvYxv1usmAiBS0n1KWWS6Gim5VVT9DI63C5t4BWvJuAyXklAcNjQddd5VFgmE86QXODW8N5W9p4wxoDQLDTciMV2RXqTfVho4mW9VvgkT2HRctDIxoTkjQngIAYQhS6ahSEjmpAVxN9Ux5UuSnUd0BRQASU0lFMRTebSGDJSXRMiQsQIGuRMiTIgYMpCiZEmVAgaaUUtTS1AAykKIWptkADukuiFqTKgBl0ifkXZEgGXSXKJkS80kMGEmqMIUohTCgGVdzQUpsKIyBIEiIyIcFJjh6lIbTKRFToCglALLQU0t7aqniiU+nCCi3jOiRR2k/m6RMzaKQBPDV0bUZkaqx0DDEuRSBGiCJFlcWQjGmGJWQp13R0WPiypdAmGFXBpUnRUNoOLKUwJphV30QLuhhKw4MouYTeYV8aIJBRNRY+DKEwJOYWg6Gxd0RqVhwM8YE005Wj6MxNNO3giw4e5nujld0UrQ803gkyDglsFFeTPdFK7oZWhyjguLOpGw4ryZ9tGeCI2gPBXJiPBdzbkbColQMPKeMPKs+aPFJzXWjY9EBtB1on6vbxUzmu1ODBwRTBNEMULeKc2nYFNDRwCc1vUEUx2iMyJvBFYwDY1SGjrTg3gigsYxp9lHjaepMYLb0VjhwToOSDNBttC5I3sC5HFmTKJhUmMpFyC0GCe1cuSRYUFcuXJoBAlXLkwEKRcuQS+giQrlyEIq8blc3LlcRe97EjhwVV0uT23+8Vy5MgXpcntv94pRVye2/wB4rlyRIpqpPbd7xXdKk9t3vFcuUFnCrk+8f7xS9Lk+8f7xXLkwAuq5PvH+8U01Untu94rlyZLGiqk9t3vFPFVJ7bveK5ckAvSpPbd7xTelSe273ilXJiF6XJ7b/eKc2rk9t/vFcuV9gHdLk+8f7xXCrk+8f7xXLlIDhVyfeP8AeK7pcn3j/ePmuXJgONbL94/3nea5cuQB/9k=" class="img-calc">
-                                    <p class="text-center">รูปขาออก</p>
+                                    <img id="img_out" class="img-calc-2">
+                                    <p class="text-center mb-0">รูปขาออก</p>
                                 </div>
-                            </div> -->
+                            </div>
+                            <div class="col-md-12">
+                                <hr>
+                            </div>
+                            <div class="col-md-12 text-blue" style="zoom: 80%;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="first_name"
+                                            class="col-form-label text-blue">ชื่อ-นามสกุล</label>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-control-test p" id="name_" style="background: #f1f1f1;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-blue" style="zoom: 80%;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="member_type"
+                                            class="col-form-label text-blue">ประเภทสมาชิก</label>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-control-test p" id="mem_type" style="background: #f1f1f1;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="zoom: 80%;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="expiry_date"
+                                            class="col-form-label text-blue">วันที่หมดอายุ</label>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-control-test p" id="expi" style="background: #f1f1f1;"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-7 mt-2" style="zoom: 70%;">
-                            <div class="row g-2 mt-2">
-                                <div class="col-md-6 text-center">
+                        <div class="col-lg-7" style="zoom: 78%;">
+                            <div class="row g-2">
+                                <div class="col-md-6 text-center mt-4">
                                     <h5 class="text-blue">ป้ายทะเบียนรถ</h5>
-                                    <div class="form-control">{{car_out}}</div>
-                                    <div class="fw-normal">{{province}}</div>
+                                    <!-- <p class="text-blue2" style="font-size: 5rem;">7กญ3603</p> -->
+                                    <h3 class="text-blue2" style="font-size: 5rem;" id="license_plate"></h3>
+                                    <div class="fw-normal" style="font-size: 1.5rem;margin-top: -1.5rem;" id="province"></div>
+                                    <!-- <div class="fw-normal" style="font-size: 1.5rem;margin-top: -1.5rem;">กรุงเทพมหานคร</div> -->
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-2">
-                                        <div class="form-control" id="time_out">{{time_out}}</div>
+                                        <div class="form-control" id="timeIn" style="font-size: 1rem;border: 0;background: #f1f1f1;"></div>
                                         <label for="time_out">เวลาเข้า</label>
                                     </div>
                                     <div class="form-floating mb-2">
-                                        <div class="form-control" id="time_total">{{time_total}}</div>
+                                        <div class="form-control" id="timeIn" style="font-size: 1rem;border: 0;background: #f1f1f1;"></div>
+                                        <label for="time_out">เวลาออก</label>
+                                    </div>
+                                    <div class="form-floating mb-2">
+                                        <div class="form-control" id="total_time" style="font-size: 1rem;border: 0;background: #f1f1f1;"></div>
                                         <label for="insert_date">เวลาจอด</label>
                                     </div>
                                 </div>
-                                <div class="col-md-12 px-5">
+                                <div class="col-md-12 px-5 mb-0">
                                     <hr>
                                 </div>
-                                <form class="row" method="POST" id="form">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-2">
-                                        <input type="number" value="0" min="0" class="form-control input-field" style="border: 3px solid #B4C8E2;" name="discount" id="discount">
-                                        <label for="discount">คูปอง</label>
+                                <form method="POST" id="form">
+                                    <div class="col-md-12 text-blue">
+                                        <div class="text-center">
+                                            <label for="amount" class="form-label h5">ค่าจอดรถ</label>
+                                            <div type="number" class="form-control input-parking-fee shadow" id="price" style="font-size: 3rem;
+                                            color: #0800ff !important;">
+                                        </div>
                                     </div>
-                                    <div class="form-floating">
-                                        <input type="number" value="0" min="0" class="form-control input-field" style="border: 3px solid #B4C8E2;" name="fines" id="fines">
-                                        <label for="fines">ค่าปรับ</label>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-2">
+                                                <input type="number" value="0" min="0" class="form-control input-field"
+                                                    style="border: 3px solid #B4C8E2;" name="" id="">
+                                                <label for="discount">เลขที่คูปอง</label>
+                                            </div>
+                                            <div class="form-floating mb-2">
+                                                <input type="number" value="0" min="0" class="form-control input-field"
+                                                    style="border: 3px solid #B4C8E2;" name="discount" id="discount">
+                                                <label for="discount">คูปอง</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input type="number" value="0" min="0" class="form-control input-field"
+                                                    style="border: 3px solid #B4C8E2;" name="fines" id="fines">
+                                                <label for="fines">ค่าปรับ</label>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <span>
+                                                    <input type="radio" class="btn-check2" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                                                    <label class="btn-outline-money width-btn-money" for="btnradio1">เงินสด</label>
+                                                </span>
+                                                <span>
+                                                    <input type="radio" class="btn-check2" name="btnradio" id="btnradio2" autocomplete="off">
+                                                    <label class="btn-outline-money width-btn-money" for="btnradio2">Banking</label>
+                                                </span>
+                                                <span>
+                                                    <input type="radio" class="btn-check2" name="btnradio" id="btnradio3" autocomplete="off">
+                                                    <label class="btn-outline-money width-btn-money" for="btnradio3">True Money</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-blue">
+                                            <div class="text-center">
+                                                <label for="receieve" class="form-label h5">เงินที่ได้รับ</label>
+                                                <input type="text" name="receieve" class="form-control shadow input-field"
+                                                style="border-radius: 34px;border: 3px solid #B4C8E2;font-size: 2.75rem;" id="receieve"
+                                                type="number" value="0" min="0">
+                                            </div>
+                                            <div class="text-center mt-2">
+                                                <label for="changes" class="form-label h5">เงินทอน</label>
+                                                <input type="text" class="form-control shadow"
+                                                    style="border-radius: 34px;font-size: 2.75rem;" id="changes"
+                                                    name="changes" readonly>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-check my-2 mx-3">
-                                        <input class="form-check-input" type="radio"
-                                            name="flexRadioDefault" id="flexRadioDefault1" checked>
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            เงินสด
-                                        </label>
+
+                                    <div class="col-md-12 mt-2">
+                                        <button type="submit" id="finish" class="btn btn-primary col-12 btn-lg" style="background-color: #E66767;
+                                        border-color: #E66767;">ยืนยัน</button>
                                     </div>
-                                </div>
-                                <div class="col-md-6 text-blue">
-                                    <div class="text-center">
-                                        <label for="amount" class="form-label h5">ค่าจอดรถ</label>
-                                        <input type="number" class="form-control input-parking-fee shadow" id="amount" value="{{amount}}" readonly>
-                                        <input type="hidden" name="original_amount" id="original_amount"value="{{amount}}">
-                                        <input type="hidden" name="excluding_vat" id="excluding_vat" value="{{excluding_vat}}" >
-                                        <input type="hidden" name="vat" id="vat" value="{{vat}}" >
-                                        <input type="hidden" name="amount" id="amount" value="{{amount}}" >
-                                        <input type="hidden" name="original_car_out" id="original_car_out" value="{{car_out}}" >
-                                        <input type="hidden" name="original_time_total" id="original_time_total" value="{{time_total}}" >
-
-                                        <input type="hidden" name="time_in" id="time_in" value="{{time_in}}" >
-                                        <input type="hidden" name="date_in" id="date_in" value="{{date_in}}" >
-                                        <input type="hidden" name="time_out" id="time_out" value="{{time_out}}" >
-                                        <input type="hidden" name="date_out" id="date_out" value="{{date_out}}" >
-
-                                        <input type="hidden" name="gate" id="gate" value="{{gate}}" >
-                                        <input type="hidden" name="TAX_ID" id="TAX_ID" value="0735541000291">
-                                        <input type="hidden" name="POS_ID" id="POS_ID" value="Ps02020-02">
-                                        <input type="hidden" name="REG_ID" id="REG_ID" value="1234567890123">
-                                        <input type="hidden" name="user" id="user" value="{{user}}">
-                                        <input type="hidden" name="cashier_box" id="cashier_box" value="exit-2">
-
-                            </div>
-                                </div>
-                                <div class="col-md-6 text-center text-blue">
-                                    <label for="receieve" class="form-label h5" >เงินที่ได้รับ</label>
-                                    <input type="text" name="receieve" class="form-control shadow input-field" style="border-radius: 34px;border: 3px solid #B4C8E2;" id="receieve" type="number" value="0" min="0">
-                                </div>
-                                
-                                <div class="col-md-6 text-center text-blue">
-                                    <label for="changes" class="form-label h5">เงินทอน</label>
-                                    <input type="text" class="form-control shadow" style="border-radius: 34px;color: #F72C25 !important;" id="changes" name="changes" readonly>
-                                    <button type="submit" class="btn btn-primary btn-sm mt-2 col-4">ยืนยัน</button>
-                                </div>
                                 </form>
-                                <div class="col-md-12 px-5">
-                                    <hr>
-                                </div>
-                                <div class="col-md-12 text-blue">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <label for="first_name" class="col-form-label text-blue">ชื่อ-นามสกุล</label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-control-test p" id="first_name" value="{{name}}">{{name}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 text-blue">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <label for="member_type" class="col-form-label text-blue">ประเภทสมาชิก</label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-control-test p" id="member_type" value="{{mem_type}}">{{mem_type}}</div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="col-md-12 text-blue mb-3">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <label for="expiry_date" class="col-form-label text-blue">วันที่หมดอายุ</label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-control-test p" id="expiry_date" value="{{expiry_date}}">{{ expiry_date }}</div>
-                                        </div>
                                         <div class="col-md-4 m-0 p-0">
-                                            <a href="{{ url_for('receipt_two') }}" target="_blank" type="button" class="btn btn-primary floating-button">
+                                            <a href="{{ url_for('receipt') }}" target="_blank" type="button"
+                                                class="btn btn-primary floating-button">
                                                 <i class="fas fa-print"></i> พิมพ์ใบเสร็จ
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                        </div>          
+                        </div>
                     </div>
 
                 </div>
@@ -208,52 +249,148 @@
 
     <!-- Timeline JS-->
     <script type="text/javascript">
+
+    //   $(function() { //คลิกยืนยัน
+    //     $('#finish').on('click', function(e) {
+    //       e.preventDefault()
+    //       $.getJSON('/background_process_test',
+    //           function(data) {
+    //         //ฟังก์ชั่น /background_process_test ทำงาน
+    //       });
+    //       return false;
+    //     });
+    //   });
+
+
         var display = setInterval(function () { Time() }, 0);
         function Time() {
             var date = new Date();
             var time = date.toLocaleTimeString();
             document.getElementById("timecurrent").innerHTML = time;
-        } 
-
+        }
 
         function showImage() {
             document.getElementById('loadingImage').style.visibility = document.getElementById('loadingImage').style.visibility == 'visible' ? 'hidden' : 'visible';
         }
 
-
         //Move the cursor to the next field and not submitting the form on enter
-        $(document).ready(function() {
-        $('.input-field').keypress(function (e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                var index = $('.input-field').index(this) + 1;
-                $('.input-field').eq(index).focus();
-            }
+        $(document).ready(function () {
+            $('.input-field').keypress(function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    var index = $('.input-field').index(this) + 1;
+                    $('.input-field').eq(index).focus();
+                }
+            });
+
+            $(document).ready(function () {
+                $('#fines, #discount, #receieve').on('keyup', function () {
+                    var original = parseInt($('#original_amount').val());
+                    var gate = parseInt($('#gate').val());
+                    var fines = parseInt($('#fines').val());
+                    var discount = parseInt($('#discount').val());
+                    var receieve = parseInt($('#receieve').val());
+                    var total = original + fines - discount;
+                    var changes = receieve - total; +
+                        $('#amount').val(total);
+                    $('#changes').val(changes);
+                })
+            });
         });
 
-        $(document).ready(function() {
-            $('#fines, #discount, #receieve').on('keyup' ,function(){
-                var original = parseInt($('#original_amount').val());
-                var gate = parseInt($('#gate').val());
-                var fines = parseInt($('#fines').val());
-                var discount = parseInt($('#discount').val());
-                var receieve = parseInt($('#receieve').val());
-                var total = original + fines - discount;
-                var changes = receieve - total;
-                $('#amount').val(total);
-                $('#changes').val(changes);
-            })
+        $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
+            $("body").toggleClass("sidebar-toggled");
+            $(".sidebar").toggleClass("toggled");
+            if ($(".sidebar").hasClass("toggled")) {
+                $('.sidebar .collapse').collapse('hide');
+            };
         });
-    });
-
-    $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
-      $("body").toggleClass("sidebar-toggled");
-      $(".sidebar").toggleClass("toggled");
-      if ($(".sidebar").hasClass("toggled")) {
-        $('.sidebar .collapse').collapse('hide');
-      };
-    });
-
     </script>
 </body>
+
+<!-- รับ socket จาก port 7000 -->
+<script id ="socket" src="http://localhost:7000/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+   
+    <script type="text/javascript"  charset="utf-8">
+    var licenP;
+    var lp = document.getElementById("license_plate");
+    var prov;
+    var province = document.getElementById("province");
+    var time;
+    var timeIn = document.getElementById("timeIn");
+    var totalT;
+    var totaltime = document.getElementById("total_time");
+    var imgOut;
+    var img_out = document.getElementById("img_out");
+    var imgIn;
+    var img_in = document.getElementById("img_in");
+
+    var name_ ;
+    var name_mem = document.getElementById("name_"); //ชื่อลูกค้า
+    var expi_;
+    var expi = document.getElementById("expi");
+    var memT;
+    var memType = document.getElementById("mem_type")
+
+    var price_;
+    var price = document.getElementById("price");
+    
+    var ID_;
+    var ID = document.getElementById("ID");
+
+     var socket = io.connect('http://localhost:7000');
+      socket.on('hi',function(data) {
+        licenP= data.license_plate;
+        lp.innerHTML = licenP;
+        lp.innerHTML = lp.innerHTML;
+
+        prov = data.province;
+        province.innerHTML = prov;
+        province.innerHTML =  province.innerHTML;
+
+        time= data.time_in;
+        timeIn.innerHTML = time;
+        timeIn.innerHTML = timeIn.innerHTML;
+
+        totalT = data.total_time;
+        totaltime.innerHTML = totalT;
+        totaltime.innerHTML = totaltime.innerHTML;
+
+        imgOut = data.img_out;
+        img_out.src = imgOut;
+        img_out.src = img_out.src;
+     
+        imgIn = data.img_in;
+        img_in.src = imgIn;
+        img_in.src = img_in.src;
+
+        /////////////////////////////
+        name_ = data.name;
+        name_mem.innerHTML = name_;
+        name_mem.innerHTML=name_mem.innerHTML;
+
+        expi_ = data.expi;
+        expi.innerHTML = expi_;
+        expi.innerHTML= expi.innerHTML;
+
+        memT = data.memberType;
+        memType.innerHTML = memT;
+        memType.innerHTML = memType.innerHTML;
+
+        price_ = data.price;
+        price.innerHTML = price_;
+        price.innerHTML  =  price.innerHTML ;
+
+        ID_ = data.id;
+        ID.innerHTML = ID_;
+        ID.innerHTML =  ID.innerHTML;
+
+
+
+      });
+     
+
+    </script>
+
 </html>
